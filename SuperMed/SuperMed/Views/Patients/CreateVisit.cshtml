@@ -1,0 +1,41 @@
+﻿@model SuperMed.Models.ViewModels.CreateVisitViewModel
+
+@{
+    ViewData["Title"] = "Nowa wizyta";
+}
+
+
+<h3>Zarejestruj nową wizytę <b>na dzisiaj</b></h3>
+
+<a asp-controller="Patients" asp-action="Index">← Wróć</a>
+
+<hr />
+<form asp-controller="Patients" asp-action="SubmitVisit" method="post" class="form-group" role="form">
+
+    <div class="form-group">
+        <div class="col-md-10">
+            @Html.DropDownListFor(m => m.Doctor, Model.Doctors, "Wybierz doktora z listy dostępnych", new { @class = "form-control" })
+            <br />
+            <label asp-for="StartDateTime">Wybierz datę wizyty</label>
+            <div class="col-md-10">
+                <input asp-for="StartDateTime" class="form-control" />
+                <span asp-validation-for="StartDateTime" class="text-danger"></span>
+            </div>
+            <br />
+
+
+            <label asp-for="Description">Krótki opis</label>
+            <div class="col-md-10">
+                <textarea type="text" asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+        </div>
+        <br/>
+        
+        <div class="form-group">
+            <div class="col-md-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Utwórz" />
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,59 @@
+﻿@model SuperMed.Models.ViewModels.RegisterDoctorViewModel
+@{
+    ViewData["Title"] = "Rejestracja doktora";
+}
+
+<h1>Register as a doctor</h1>
+
+<form asp-controller="Account" asp-action="RegisterDoctor" method="post" class="form-group" role="form">
+
+    <h4>Create account in SuperMed</h4>
+    <hr>
+
+    <div class="form-group">
+        <label asp-for="Name">Nazwa użytkownika</label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <label asp-for="FirstName">Imię</label>
+        <div class="col-md-10">
+            <input asp-for="FirstName" class="form-control" />
+            <span asp-validation-for="FirstName" class="text-danger"></span>
+        </div>
+        <label asp-for="LastName">Nazwisko</label>
+        <div class="col-md-10">
+            <input asp-for="LastName" class="form-control" />
+            <span asp-validation-for="LastName" class="text-danger"></span>
+        </div>
+        <label asp-for="Email">Email</label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <label asp-for="Password">Hasło</label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+        <label asp-for="Phone">Telefon</label>
+        <div class="col-md-10">
+            <input asp-for="Phone" class="form-control" />
+            <span asp-validation-for="Phone" class="text-danger"></span>
+        </div>
+        <label asp-for="Specialization">Specialization</label>
+        <div class="col-md-10">
+            <input asp-for="Specialization" class="form-control" />
+            <span asp-validation-for="Specialization" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <div class="col-md-2 col-md-10">
+            <input type="submit" class="btn btn-primary" value="Register" />
+        </div>
+    </div>
+
+</form>

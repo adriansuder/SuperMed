@@ -1,0 +1,64 @@
+﻿@model SuperMed.Models.Entities.Patient
+@{
+    ViewData["Title"] = "Panel pacjenta";
+}
+
+
+<div class="row">
+    <div class="col-sm-8">
+        <div class="card">
+            <h5 class="card-header">Twoje wizyty</h5>
+            <div class="card-body">
+                @*<p class="card-text"><i>Nie masz jeszcze żadnych wizyt.</i></p>*@
+
+
+                <ul class="card-text">
+
+                    @if (@Model.Appointments == null)
+                    {
+                        <li>Nie masz na dzisiaj żadnych wizyt.</li>
+                    }
+                    else
+                    {
+                        foreach (var modelAppointment in @Model.Appointments)
+                        {
+                            <li class="list-group-item">
+                                <button type="button" class="btn btn-outline-primary">@modelAppointment.StartDateTime@*.ToShortTimeString()*@</button>&nbsp;
+                                @modelAppointment.Doctor.LastName
+                                @modelAppointment.Doctor.FirstName
+                                <button type="button" class="btn btn-primary float-right">Otwórz</button>
+                            </li>
+                        }
+                    }
+                </ul>
+
+
+
+                <a class="btn btn-primary" asp-controller="Patients" asp-action="CreateVisit">Zarejestruj wizytę</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-4">
+
+        <div class="card">
+            <h5 class="card-header">Twoje informacje</h5>
+            <div class="card-body">
+                <p class="card-text">
+                    Witamy, @Model.FirstName!
+                    <br />
+                    <br />
+                    @Model.FirstName @Model.LastName
+                    <br />
+                    @Model.Age lat (@Model.BirthDate.ToString("dd/MM/yyyy")), @Model.Gender
+                    <br />
+                    Telefon: @Model.Phone
+                    <br />
+
+
+
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>

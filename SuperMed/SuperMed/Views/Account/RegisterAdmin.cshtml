@@ -1,0 +1,36 @@
+﻿@model SuperMed.Models.ViewModels.RegisterAdminViewModel
+
+<h1>Register</h1>
+
+<form asp-controller="Account" asp-action="RegisterAdmin" method="post" class="form" role="form">
+
+    <h4>Create account in SuperMed</h4>
+    <hr>
+
+    <div class="form-group">
+        <label asp-for="Name">Imię i nazwisko</label>
+        <div class="col-md-10">
+            <input asp-for="Name" class="form-control" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <label asp-for="Email">Email</label>
+        <div class="col-md-10">
+            <input asp-for="Email" class="form-control" />
+            <span asp-validation-for="Email" class="text-danger"></span>
+        </div>
+        <label asp-for="Password">Hasło</label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group">
+        <div class="col-md-2 col-md-10">
+            <input type="submit" class="btn btn-primary" value="Register" />
+        </div>
+    </div>
+
+</form>
