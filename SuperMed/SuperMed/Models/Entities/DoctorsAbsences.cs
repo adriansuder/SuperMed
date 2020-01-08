@@ -13,6 +13,7 @@ namespace SuperMed.Models.Entities
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [DataType(DataType.Date)]
         public DateTime AbsenceDate { get; set; }
+        public string AbsenceDescription { get; set; }
         [ForeignKey("Doctor")]
         public int DoctorId { get; set; }
         public virtual Doctor Doctor { get; set; }

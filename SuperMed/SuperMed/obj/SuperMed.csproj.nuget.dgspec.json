@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\adria\\Desktop\\WSEI_SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj": {}
+    "C:\\Users\\adria\\Desktop\\REPOS\\SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj": {}
   },
   "projects": {
-    "C:\\Users\\adria\\Desktop\\WSEI_SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj": {
+    "C:\\Users\\adria\\Desktop\\REPOS\\SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\adria\\Desktop\\WSEI_SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj",
+        "projectUniqueName": "C:\\Users\\adria\\Desktop\\REPOS\\SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj",
         "projectName": "SuperMed",
-        "projectPath": "C:\\Users\\adria\\Desktop\\WSEI_SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj",
+        "projectPath": "C:\\Users\\adria\\Desktop\\REPOS\\SuperMed\\SuperMed\\SuperMed\\SuperMed\\SuperMed.csproj",
         "packagesPath": "C:\\Users\\adria\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\adria\\Desktop\\WSEI_SuperMed\\SuperMed\\SuperMed\\SuperMed\\obj\\",
+        "outputPath": "C:\\Users\\adria\\Desktop\\REPOS\\SuperMed\\SuperMed\\SuperMed\\SuperMed\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
@@ -71,6 +71,10 @@
               "target": "Package",
               "version": "[2.2.0, )",
               "autoReferenced": true
+            },
+            "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
+              "target": "Package",
+              "version": "[2.2.4, )"
             }
           },
           "imports": [

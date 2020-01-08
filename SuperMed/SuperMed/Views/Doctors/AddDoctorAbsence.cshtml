@@ -1,0 +1,38 @@
+﻿@model SuperMed.Models.ViewModels.AddDoctorAbsenceViewModel
+
+@{
+    ViewData["Title"] = "AddDoctorAbsence";
+}
+
+<h3>Doktorze, dodaj nową nieobecność</h3>
+
+<a asp-controller="Doctors" asp-action="Index">← Wróć</a>
+
+<hr />
+<form asp-controller="Doctors" asp-action="SubmitAbsence" method="post" class="form-group" role="form">
+
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="AbsenceDate">Wybierz datę Twojej nieobecności</label>
+            <div class="col-md-10">
+                <input asp-for="AbsenceDate" class="form-control" />
+                <span asp-validation-for="AbsenceDate" class="text-danger"></span>
+            </div>
+            <br />
+
+
+            <label asp-for="AbsenceDescription">Krótki opis</label>
+            <div class="col-md-10">
+                <textarea type="text" asp-for="AbsenceDescription" class="form-control"></textarea>
+                <span asp-validation-for="AbsenceDescription" class="text-danger"></span>
+            </div>
+        </div>
+        <br />
+
+        <div class="form-group">
+            <div class="col-md-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Utwórz" />
+            </div>
+        </div>
+    </div>
+</form>
