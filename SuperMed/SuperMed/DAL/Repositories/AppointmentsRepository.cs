@@ -1,8 +1,9 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperMed.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using SuperMed.Models.Entities;
 
 namespace SuperMed.DAL.Repositories
 {
@@ -23,14 +24,43 @@ namespace SuperMed.DAL.Repositories
             return appointment;
         }
 
-        public async Task<List<Appointment>> GetByDoctorName(string docName)
+        public List<Appointment> GetTodaysAppointmentByDoctorName(string docName)
         {
-            return  _dbContext.Appointments.Where(a => a.Doctor.Name == docName && a.StartDateTime.ToString("M/d/yyyy") == DateTime.Now.ToString("M/d/yyyy")).ToList();
+            return  _dbContext.Appointments
+                .Include("Doctor")
+                .Include("Patient")
+                .Where(a => a.Doctor.Name == docName && a.StartDateTime == DateTime.Today).ToList();
         }
 
-        public async Task<List<Appointment>> GetByPatientName(string patientName)
+        public List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string docName)
         {
-            return _dbContext.Appointments.Where(a => a.Patient.Name == patientName).ToList();
+            return _dbContext.Appointments
+                .Include("Doctor")
+                .Include("Patient")
+                .Where(a => a.Doctor.Name == docName
+                            && a.StartDateTime.Year == date.Year 
+                            && a.StartDateTime.Month == date.Month 
+                            && a.StartDateTime.Day == date.Day).ToList();
+        }
+
+        public List<Appointment> GetByPatientName(string patientName)
+        {
+            return _dbContext.Appointments
+                .Include("Patient")
+                .Include("Doctor")
+                .Where(a => a.Patient.Name == patientName).ToList();
+        }
+
+        public List<Appointment> GetPastPatientsAppointments(string patientName)
+        {
+            return GetByPatientName(patientName).Where(d => d.StartDateTime < DateTime.Now)
+                .OrderByDescending(d => d.StartDateTime).ToList();
+        }
+
+        public List<Appointment> GetUpcommingPatientsAppointments(string patientName)
+        {
+            return GetByPatientName(patientName).Where(d => d.StartDateTime > DateTime.Now)
+                .OrderBy(d => d.StartDateTime).ToList();
         }
     }
 }

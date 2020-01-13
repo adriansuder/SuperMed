@@ -14,7 +14,7 @@ namespace SuperMed.DAL.Repositories
             this._dbContext = _dbContext;
         }
 
-        public async Task<IEnumerable<Doctor>> GetAll()
+        public async Task<IEnumerable<Doctor>> GetAllDoctors()
         {
             var docs = await _dbContext.Doctors.ToListAsync();
             return docs;

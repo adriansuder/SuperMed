@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -33,49 +34,51 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var docName = _userManager.GetUserName(User);
-
-            var docViewModel = new DoctorsViewModel
+            var doctorsViewModel = new DoctorsViewModel
             {
-                Appointments = await _appointmentsRepository.GetByDoctorName(docName)
+                Appointments = _appointmentsRepository.GetTodaysAppointmentByDoctorName(_userManager.GetUserName(User))
             };
-
-
-            if (docViewModel.Appointments.Count != 0)
+            
+            if (doctorsViewModel.Appointments.Count != 0)
             {
-                foreach (var appointment in docViewModel.Appointments)
+                foreach (var appointment in doctorsViewModel.Appointments)
                 {
-                    appointment.Patient = await _patientsRepository.Get(appointment.PatientId);
+                    appointment.Patient = await _patientsRepository.GetAppointmentByPatientId(appointment.PatientId);
                 }
             }
 
-            return View(docViewModel);
+            return View(doctorsViewModel);
         }
 
-        public async Task<IActionResult> AddDoctorAbsence()
+        [HttpGet]
+        public IActionResult AddDoctorAbsence()
         {
-            //var docId = _userManager.GetUserId(User);
-            var absenceModel = new AddDoctorAbsenceViewModel
+            var addDoctorAbsenceViewModel = new AddDoctorAbsenceViewModel()
             {
-               
+                AbsenceDate = DateTime.Today
             };
 
-            return View(absenceModel);
+            return View(addDoctorAbsenceViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> SubmitAbsence(AddDoctorAbsenceViewModel model)
+        public async Task<IActionResult> AddDoctorAbsence(AddDoctorAbsenceViewModel model)
         {
-            var userName = _userManager.GetUserName(User);
-            var doctor = await _doctorsRepository.GetByName(userName);
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            
             var absence = new DoctorAbsence
             {
                 AbsenceDate = model.AbsenceDate,
-                DoctorId =doctor.DoctorId,
+                DoctorId = doctor.DoctorId,
                 AbsenceDescription = model.AbsenceDescription
             };
 
-            await _absenceRepository.Add(absence);
+            await _absenceRepository.AddAsync(absence);
 
             return RedirectToAction("Index", "Home");
         }

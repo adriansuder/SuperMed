@@ -6,7 +6,7 @@ namespace SuperMed.DAL.Repositories
 {
     public interface IDoctorsRepository
     {
-        Task<IEnumerable<Doctor>> GetAll();
+        Task<IEnumerable<Doctor>> GetAllDoctors();
         Task<Doctor> Get(int id);
         Task<Doctor> GetByName(string name);
         Task<Doctor> Add(Doctor doctor);

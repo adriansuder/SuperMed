@@ -1,21 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using SuperMed.Attributes;
+using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using SuperMed.Models.Entities;
 
 namespace SuperMed.Models.ViewModels
 {
     public class AddDoctorAbsenceViewModel
     {
-
-        [Required]
-        public string AbsenceDescription { get; set; }
-
-        [Required]
+        [Required(ErrorMessage = "Data nieobecności jest wymagana.")]
         [DataType(DataType.Date)]
+        [NotBeforeToday(ErrorMessage = "Data nieobecności nieprawidłowa.")]
         public DateTime AbsenceDate { get; set; }
 
+        [Required(ErrorMessage = "Krótki opis jest wymagany.")]
+        public string AbsenceDescription { get; set; }
     }
 }
 

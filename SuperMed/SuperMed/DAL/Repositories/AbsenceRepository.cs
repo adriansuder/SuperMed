@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using SuperMed.Models.Entities;
@@ -15,7 +14,7 @@ namespace SuperMed.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<DoctorAbsence> Add(DoctorAbsence doctorAbsence)
+        public async Task<DoctorAbsence> AddAsync(DoctorAbsence doctorAbsence)
         {
             await _dbContext.DoctorsAbsences.AddAsync(doctorAbsence);
             await _dbContext.SaveChangesAsync();
@@ -23,5 +22,12 @@ namespace SuperMed.DAL.Repositories
             return doctorAbsence;
         }
 
+        public DoctorAbsence GetDoctorsAbscenceByDate(string doctorName, DateTime date)
+        {
+            var doctorsAbscence =
+                _dbContext.DoctorsAbsences.FirstOrDefault(a => a.Doctor.Name == doctorName && a.AbsenceDate == date);
+
+            return doctorsAbscence;
+        }
     }
 }

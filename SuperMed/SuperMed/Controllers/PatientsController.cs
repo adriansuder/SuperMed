@@ -1,15 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using SuperMed.Auth;
 using SuperMed.DAL.Repositories;
+using SuperMed.Managers;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SuperMed.Controllers
 {
@@ -21,49 +22,45 @@ namespace SuperMed.Controllers
         private readonly IDoctorsRepository _doctorsRepository;
         private readonly ISpecializationsRepository _specializationsRepository;
         private readonly IAppointmentsRepository _appointmentsRepository;
+        private readonly IAbsenceRepository _absenceRepository;
 
         public PatientsController(
             UserManager<ApplicationUser> userManager, 
             IPatientsRepository patientsRepository,
             IDoctorsRepository doctorsRepository,
             ISpecializationsRepository specializationsRepository,
-            IAppointmentsRepository appointmentsRepository)
+            IAppointmentsRepository appointmentsRepository,
+            IAbsenceRepository absenceRepository)
         {
             _userManager = userManager;
             _patientsRepository = patientsRepository;
             _doctorsRepository = doctorsRepository;
             _specializationsRepository = specializationsRepository;
             _appointmentsRepository = appointmentsRepository;
+            _absenceRepository = absenceRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            var user = _userManager.GetUserName(User);
-            var patientInfo = new Patient
+            var patientViewModel = new PatientViewModel
             {
-                Appointments = await _appointmentsRepository.GetByPatientName(user),
+                Patient = await _patientsRepository.GetByName(User.Identity.Name),
+                GetPastAppointments = _appointmentsRepository.GetPastPatientsAppointments(User.Identity.Name),
+                GetUpcommingAppointments = _appointmentsRepository.GetUpcommingPatientsAppointments(User.Identity.Name)
             };
 
-            if (patientInfo.Appointments.Count != 0)
-            {
-                foreach (var appointment in patientInfo.Appointments)
-                {
-                    appointment.Doctor = await _doctorsRepository.Get(appointment.DoctorId);
-                }
-            }
-            var getUserInfo = await _patientsRepository.GetByName(user);
-            return View(getUserInfo);
+            return View(patientViewModel);
         }
 
         public async Task<IActionResult> CreateVisit()
         {
-            var allDoctors = await _doctorsRepository.GetAll();
-
+            var allDoctors = await _doctorsRepository.GetAllDoctors();
             var selectList = new List<SelectListItem>();
 
             foreach (var doctor in allDoctors)
             {
                 var specname = await _specializationsRepository.Get(doctor.SpecializationId);
+
                 selectList.Add(new SelectListItem
                 {
                     Value = doctor.Name,
@@ -71,24 +68,99 @@ namespace SuperMed.Controllers
                 });
             }
 
+            var orderedDoctors = selectList.OrderBy(m => m.Text).ToList();
             var visitModel = new CreateVisitViewModel
             {
-                Doctors = selectList.OrderBy(p => p.Text)
+                Doctors = orderedDoctors,
+                StartDateTime = DateTime.Today
             };
 
             return View(visitModel);
         }
-        
+
         [HttpPost]
-        public async Task<IActionResult> SubmitVisit(CreateVisitViewModel model)
+        public async Task<IActionResult> CreateVisitStep2(CreateVisitViewModel model)
+        {
+            var isDoctorAvailableOnDate = _absenceRepository.GetDoctorsAbscenceByDate(model.DoctorName, model.StartDateTime);
+
+            if (isDoctorAvailableOnDate != null)
+            {
+                ModelState.AddModelError("doctorError", "Niestety, wybrany lekarz jest w tym dniu niedostępny");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                var allDoctors = await _doctorsRepository.GetAllDoctors();
+
+                var selectList = new List<SelectListItem>();
+
+                foreach (var doc in allDoctors)
+                {
+                    var specname = await _specializationsRepository.Get(doc.SpecializationId);
+
+                    selectList.Add(new SelectListItem
+                    {
+                        Value = doc.Name,
+                        Text = $"{specname.Name} - {doc.FirstName} {doc.LastName}"
+                    });
+                }
+
+                model.Doctors = selectList.OrderBy(m => m.Text).ToList();
+
+                return View("CreateVisit", model);
+            }
+
+            var doctor = await _doctorsRepository.GetByName(model.DoctorName);
+            var app = _appointmentsRepository.GetDoctorsAppointmentsByDate(model.StartDateTime, model.DoctorName);
+
+            AppointmentManager manager = new AppointmentManager();
+            var dates = manager.GetNearest(model.StartDateTime);
+
+            foreach (var date in app)
+            {
+                dates.RemoveAll(d => d.TimeOfDay == date.StartDateTime.TimeOfDay);
+            }
+           
+            var step2 = new CreateVisitStep2ViewModel
+            {
+                Date = dates,
+                Doctor = doctor,
+                DoctorName = model.DoctorName,
+                StartDateTime = model.StartDateTime,
+                Description = model.Description
+            };
+
+            return View(step2);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> CreateVisitStep3(CreateVisitStep2ViewModel model)
+        {
+            var doctor = await _doctorsRepository.GetByName(model.DoctorName);
+            var step3 = new CreateVisitStep3ViewModel
+            {
+                StartDateTime = new DateTime(model.StartDateTime.Year, model.StartDateTime.Month,
+                    model.StartDateTime.Day, model.TimeOfDay.Hour, model.TimeOfDay.Minute, 0),
+                Doctor = doctor,
+                DoctorName = model.DoctorName,
+                Description = model.Description,
+                TimeOfDay = model.TimeOfDay
+            };
+
+            return View(step3);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitVisit(CreateVisitStep3ViewModel model)
         {
             var userName = _userManager.GetUserName(User);
-            var doctor = await _doctorsRepository.GetByName(model.Doctor);
+            var doctor = await _doctorsRepository.GetByName(model.DoctorName);
             var patient = await _patientsRepository.GetByName(userName);
 
             var appointment = new Appointment
             {
-                StartDateTime = model.StartDateTime,
+                StartDateTime = new DateTime(model.StartDateTime.Year, model.StartDateTime.Month,
+                    model.StartDateTime.Day, model.TimeOfDay.Hour, model.TimeOfDay.Minute, 0),
                 Doctor = doctor,
                 Patient = patient,
                 Status = Status.New,
@@ -97,6 +169,29 @@ namespace SuperMed.Controllers
 
             await _appointmentsRepository.Add(appointment);
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> ChangeInfo()
+        {
+            var userName = _userManager.GetUserName(User);
+            var patient = await _patientsRepository.GetByName(userName);
+
+            return View("ChangeInfo", patient);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SubmitChangedInfo(Patient patient)
+        {
+            var userName = _userManager.GetUserName(User);
+            var actualPatient = await _patientsRepository.GetByName(userName);
+
+            actualPatient.LastName = patient.LastName;
+            actualPatient.Phone = patient.Phone;
+
+            await _patientsRepository.Update(actualPatient);
+            
             return RedirectToAction("Index", "Home");
         }
     }

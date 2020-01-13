@@ -31,8 +31,6 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <span>Witaj <b>@_UserManager.GetUserName(User)</b>, miłego dnia!</span>
-                    <a href="Wiadomosci.aspx">Wiadomości <span class="badge badge-pill badge-primary">13</span></a>
-                    <a href="Wiadomosci.aspx">Konto</a>
                     <a asp-controller="Account" asp-action="Logout">Wyloguj się</a>
                 }
                 else

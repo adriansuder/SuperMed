@@ -2,22 +2,23 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SuperMed.Models.Entities;
+using SuperMed.Attributes;
 
 namespace SuperMed.Models.ViewModels
 {
     public class CreateVisitViewModel
     {
         [Required]
-        public string Doctor { get; set; }
+        public string DoctorName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Krótki opis jest wymagany.")]
         public string Description { get; set; }
 
         public IEnumerable<SelectListItem> Doctors { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
+        [NotBeforeToday(ErrorMessage = "Niepoprawna data planowanej wizyty.")]
         public DateTime StartDateTime { get; set; }
     }
 }

@@ -1,0 +1,37 @@
+﻿@using System.Globalization
+@model SuperMed.Models.ViewModels.CreateVisitStep3ViewModel
+
+@{
+    ViewData["Title"] = "Nowa wizyta - krok 3";
+}
+
+<h3>Zarejestruj nową wizytę</h3>
+
+<a asp-controller="Patients" asp-action="CreateVisit">← Wróć do początku</a>
+
+<hr />
+
+Aby utworzyć wizytę, zweryfikuj podane dane i jeżeli są poprawne naciśnij przycisk Potwierdź.
+
+<form asp-controller="Patients" asp-action="SubmitVisit" method="post" class="form-group" role="form">
+    
+    @Html.HiddenFor(m => m.Description)
+    @Html.HiddenFor(m => m.DoctorName)
+    @Html.HiddenFor(m => m.StartDateTime)
+    @Html.HiddenFor(m => m.TimeOfDay)
+
+    <div class="form-group">
+        <label for="">Wybrany doktor</label>
+        <input type="text" class="form-control" id="" placeholder="@Model.Doctor.FirstName @Model.Doctor.LastName" disabled/>
+    </div>
+    <div class="form-group">
+        <label for="">Data wizyty</label>
+        <input type="text" class="form-control" id="" placeholder="@Model.StartDateTime.ToString("f", new CultureInfo("PL-pl"))" disabled>
+    </div>
+    <div class="form-group">
+        <label for="">Wybrany doktor</label>
+        <input type="text" class="form-control" id="" placeholder="@Model.Description" disabled/>
+    </div>
+
+    <input type="submit" class="btn btn-danger" value="Potwierdź"/>
+</form>

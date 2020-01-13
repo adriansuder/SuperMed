@@ -1,64 +1,82 @@
-﻿@model SuperMed.Models.Entities.Patient
+﻿@using System.Globalization
+@model SuperMed.Models.ViewModels.PatientViewModel
 @{
     ViewData["Title"] = "Panel pacjenta";
 }
 
 
-<div class="row">
-    <div class="col-sm-8">
-        <div class="card">
-            <h5 class="card-header">Twoje wizyty</h5>
-            <div class="card-body">
-                @*<p class="card-text"><i>Nie masz jeszcze żadnych wizyt.</i></p>*@
-
-
-                <ul class="card-text">
-
-                    @if (@Model.Appointments == null)
-                    {
-                        <li>Nie masz na dzisiaj żadnych wizyt.</li>
-                    }
-                    else
-                    {
-                        foreach (var modelAppointment in @Model.Appointments)
+    <div class="row">
+        <div class="col-sm-8">
+            <div class="card">
+                <h5 class="card-header">
+                    Twoje wizyty
+                    <a class="btn btn-primary float-right" asp-controller="Patients" asp-action="CreateVisit">Zarejestruj wizytę</a>
+                </h5>
+                <div class="card-body">
+                    <p class="card-text"><i>Nadchodzące wizyty</i></p>
+                    <ul class="card-text">
+                        @if (@Model.GetUpcommingAppointments.Count == 0)
                         {
-                            <li class="list-group-item">
-                                <button type="button" class="btn btn-outline-primary">@modelAppointment.StartDateTime@*.ToShortTimeString()*@</button>&nbsp;
-                                @modelAppointment.Doctor.LastName
-                                @modelAppointment.Doctor.FirstName
-                                <button type="button" class="btn btn-primary float-right">Otwórz</button>
-                            </li>
+                            <li class="list-group-item">Nie masz zaplanowanych żadnych wizyt.</li>
                         }
-                    }
-                </ul>
+                        else
+                        {
+                            foreach (var modelAppointment in @Model.GetUpcommingAppointments)
+                            {
+                                <li class="list-group-item">
+                                    <button type="button" class="btn btn-outline-primary">@modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))</button>&nbsp;
+                                    @modelAppointment.Doctor.LastName
+                                    @modelAppointment.Doctor.FirstName
+                                    <div class="btn-group float-right" role="group" aria-label="Basic example">
+                                        <button type="button" class="btn btn-secondary">Edytuj</button>
+                                        <button type="button" class="btn btn-danger">Odwołaj</button>
+                                    </div>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div><div class="card-body">
+                    <p class="card-text"><i>Poprzednie wizyty</i></p>
+                    <ul class="card-text">
+                        @if (@Model.GetPastAppointments.Count == 0)
+                        {
+                            <li class="list-group-item">Nie masz żadnych wizyt.</li>
+                        }
+                        else
+                        {
+                            foreach (var modelAppointment in @Model.GetPastAppointments)
+                            {
+                                <li class="list-group-item">
+                                    <button type="button" class="btn btn-outline-secondary disabled">@modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))</button>&nbsp;
+                                    @modelAppointment.Doctor.LastName
+                                    @modelAppointment.Doctor.FirstName
+                                    <button type="button" class="btn btn-info float-right">Zobacz</button>
+                                </li>
+                            }
+                        }
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+                <h5 class="card-header">Twoje informacje</h5>
+                <div class="card-body">
+                    <p class="card-text">
+                        Witamy, @Model.Patient.FirstName!
+                        <br />
+                        <br />
+                        @Model.Patient.FirstName @Model.Patient.LastName
+                        <br />
+                        @Model.Patient.Age lat (@Model.Patient.BirthDate.ToString("dd/MM/yyyy")), @Model.Patient.Gender
+                        <br />
+                        Telefon: @Model.Patient.Phone
+                        <br />
 
-
-
-                <a class="btn btn-primary" asp-controller="Patients" asp-action="CreateVisit">Zarejestruj wizytę</a>
+                        <br />
+                        <a class="btn btn-light" asp-controller="Patients" asp-action="ChangeInfo">Zmień dane</a>
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-    <div class="col-sm-4">
-
-        <div class="card">
-            <h5 class="card-header">Twoje informacje</h5>
-            <div class="card-body">
-                <p class="card-text">
-                    Witamy, @Model.FirstName!
-                    <br />
-                    <br />
-                    @Model.FirstName @Model.LastName
-                    <br />
-                    @Model.Age lat (@Model.BirthDate.ToString("dd/MM/yyyy")), @Model.Gender
-                    <br />
-                    Telefon: @Model.Phone
-                    <br />
-
-
-
-                </p>
-            </div>
-        </div>
-    </div>
-
-</div>

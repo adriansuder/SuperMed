@@ -1,0 +1,61 @@
+﻿@using System.Globalization
+@model SuperMed.Models.ViewModels.CreateVisitStep2ViewModel
+
+@{
+    ViewData["Title"] = "Nowa wizyta - krok 2";
+}
+
+<h3>Zarejestruj nową wizytę</h3>
+
+<a asp-controller="Patients" asp-action="CreateVisit">← Wróć do początku</a>
+
+<hr />
+<form asp-controller="Patients" asp-action="CreateVisitStep3" method="post" class="form-group" role="form">
+
+    <div class="row">
+        <div class="col-sm-8">     
+
+            @if (Model.Date.Count == 0)
+            {
+                <div class="alert alert-warning" role="alert">
+                    Brak możliwości umówienia wizyty na ten dzień @Model.StartDateTime.ToString("D", new CultureInfo("PL-pl")). <br/>Wróć i wybierz inny dzień.
+                </div>
+            }
+            else
+            {
+                @Html.HiddenFor(m => m.Description)
+                @Html.HiddenFor(m => m.DoctorName)
+                @Html.HiddenFor(m => m.StartDateTime)
+
+                <h4>
+                    Rejestrujesz wizytę u doktora<br/>
+                    dr <b>@Model.Doctor.FirstName @Model.Doctor.LastName</b><br/>
+                    na dzień <b>@Model.StartDateTime.ToString("D", new CultureInfo("PL-pl"))</b>
+                </h4>
+
+                <h6>Wybierz jedną z dostępnych godzin:</h6>
+                <div class="form-group">
+                    <div class="col-md-10 mb-3">
+                        @foreach (var date in Model.Date)
+                        {
+                        <div class="form-check form-check-inline">
+                            <input type="radio" asp-for="TimeOfDay" value="@date.ToShortTimeString()" /> @date.ToShortTimeString()
+                        </div>
+                        }
+                    </div>
+                    <div class="progress">
+                        <div class="progress-bar" role="progressbar" style="width: 66%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Krok 2</div>
+                    </div>
+                </div>
+            }
+        </div>
+        <br />
+    </div>
+
+    <div class="form-group">
+        <div class="col-md-2 col-md-10 mt-3">
+            <input type="submit" class="btn btn-primary" value="Idź do kroku 3" />
+        </div>
+    </div>
+
+</form>

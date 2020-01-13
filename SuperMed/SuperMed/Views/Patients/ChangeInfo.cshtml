@@ -1,0 +1,39 @@
+﻿@model SuperMed.Models.Entities.Patient
+
+@{
+    ViewData["Title"] = "Zmień swoje dane";
+}
+
+
+<h3>Zmień swoje dane</h3>
+<h5>Ze względów bezpieczeństwa w systemie możesz zmienić jedynie nazwisko (w przypadku zmiany stanu cywilnego) oraz numer telefonu.</h5>
+
+<a asp-controller="Patients" asp-action="Index">← Wróć</a>
+
+<hr />
+<form asp-controller="Patients" asp-action="SubmitChangedInfo" method="post" class="form-group" role="form">
+    @Html.HiddenFor(c => c.Name)
+    <div class="form-group">
+        <div class="col-md-10">
+            <label asp-for="LastName">Nazwisko</label>
+                <div class="col-md-10">
+                    <input asp-for="LastName" class="form-control" />
+                    <span asp-validation-for="LastName" class="text-danger"></span>
+                </div>
+                <br />
+                <label asp-for="Phone">Telefon</label>
+                <div class="col-md-10">
+                    <input asp-for="Phone" class="form-control" />
+                    <span asp-validation-for="Phone" class="text-danger"></span>
+                </div>
+                <br />
+        </div>
+        <br />
+
+        <div class="form-group">
+            <div class="col-md-2 col-md-10">
+                <input type="submit" class="btn btn-primary" value="Zapisz" />
+            </div>
+        </div>
+    </div>
+</form>

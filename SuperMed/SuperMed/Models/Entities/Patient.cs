@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using SuperMed.DAL;
 using SuperMed.Auth;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SuperMed.Models.Entities
 {
@@ -50,7 +49,10 @@ namespace SuperMed.Models.Entities
 
     public enum Gender
     {
+        [Display(Name="mężczyzna")]
         Male,
+
+        [Display(Name = "kobieta")]
         Female
     }
 }

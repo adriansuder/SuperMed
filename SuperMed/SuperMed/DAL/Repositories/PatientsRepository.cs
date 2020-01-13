@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SuperMed.Models.Entities;
@@ -20,7 +21,7 @@ namespace SuperMed.DAL.Repositories
             throw new System.NotImplementedException();
         }
 
-        public async Task<Patient> Get(int id)
+        public async Task<Patient> GetAppointmentByPatientId(int id)
         {
             return await _dbContext.Patients.FindAsync(id);
         }
@@ -37,9 +38,13 @@ namespace SuperMed.DAL.Repositories
             return patient;
         }
 
-        public Task<Patient> Update(Patient patient)
+        public async Task<Patient> Update(Patient patient)
         {
-            throw new System.NotImplementedException();
+            var entry = await GetAppointmentByPatientId(patient.PatientId);
+            _dbContext.Entry(entry).State = EntityState.Modified;
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
+
+            return patient;
         }
 
         public Task<Patient> Delete(int id)

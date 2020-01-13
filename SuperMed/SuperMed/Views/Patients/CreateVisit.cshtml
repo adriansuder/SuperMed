@@ -1,40 +1,43 @@
 ﻿@model SuperMed.Models.ViewModels.CreateVisitViewModel
 
 @{
-    ViewData["Title"] = "Nowa wizyta";
+    ViewData["Title"] = "Nowa wizyta - krok 1";
 }
 
+<h3>Zarejestruj nową wizytę</h3>
 
-<h3>Zarejestruj nową wizytę <b>w wybranym terminie</b></h3>
-
-<a asp-controller="Patients" asp-action="Index">← Wróć</a>
+<a asp-controller="Patients" asp-action="Index">← Wróć do strony głównej</a>
 
 <hr />
-<form asp-controller="Patients" asp-action="SubmitVisit" method="post" class="form-group" role="form">
-
+<form asp-controller="Patients" asp-action="CreateVisitStep2" method="post" class="form-group" role="form">
     <div class="form-group">
         <div class="col-md-10">
-            @Html.DropDownListFor(m => m.Doctor, Model.Doctors, "Wybierz doktora z listy dostępnych", new { @class = "form-control" })
+            @Html.DropDownListFor(m => m.DoctorName, Model.Doctors, "Wybierz doktora z listy dostępnych", new { @class = "form-control" })
+            
+            @foreach (var error in ViewData.ModelState.FindKeysWithPrefix("doctorError"))
+            {
+                <span class="text-danger float-right">@error.Value.Errors.FirstOrDefault()?.ErrorMessage</span>
+            }
+
             <br />
             <label asp-for="StartDateTime">Wybierz datę wizyty</label>
             <div class="col-md-10">
                 <input asp-for="StartDateTime" class="form-control" />
                 <span asp-validation-for="StartDateTime" class="text-danger"></span>
             </div>
-            <br />
-
-
             <label asp-for="Description">Krótki opis</label>
             <div class="col-md-10">
                 <textarea type="text" asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
+            <br/><br/>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Krok 1</div>
+            </div>
         </div>
-        <br/>
-        
         <div class="form-group">
-            <div class="col-md-2 col-md-10">
-                <input type="submit" class="btn btn-primary" value="Utwórz" />
+            <div class="col-md-2 col-md-10 mt-3">
+                <input type="submit" class="btn btn-primary" value="Idź do kroku 2" />
             </div>
         </div>
     </div>

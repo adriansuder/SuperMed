@@ -12,16 +12,16 @@
         <h4>Lista wizyt na dzisiaj:</h4>
         <ul class="list-group">
 
-            @if (@Model.Appointments == null)
+            @if (@Model.Appointments.Count == 0)
             {
-                <li>Nie masz na dzisiaj żadnych wizyt.</li>
+                <li class="list-group-item">Nie masz na dzisiaj żadnych wizyt.</li>
             }
             else
             {
                 foreach (var modelAppointment in @Model.Appointments)
                 {
                     <li class="list-group-item">
-                        <button type="button" class="btn btn-outline-primary">@modelAppointment.StartDateTime@*.ToShortTimeString()*@</button>&nbsp;
+                        <button type="button" class="btn btn-danger">@modelAppointment.StartDateTime.ToString("t")</button>&nbsp;
                         @modelAppointment.Patient.FirstName
                         @modelAppointment.Patient.LastName
                         <button type="button" class="btn btn-primary float-right">Otwórz</button>
@@ -35,16 +35,33 @@
         <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action flex-column align-items-start active">
                 <div class="d-flex w-100 justify-content-between">
-                    <h5 class="mb-1">Twoje ustawienia</h5>  
+                    <h5 class="mb-1">Twoje ustawienia</h5>
                 </div>
                 <p class="mb-1">Lista dostępnych opcji</p>
+            </a>
+            <a asp-controller="Doctors" asp-action="AddDoctorAbsence" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Historia twoich wizyt</h5>
+                </div>
+                <p class="mb-1">Przejdź by zobaczyć historię swoich wizyt.</p>
+
             </a>
             <a asp-controller="Doctors" asp-action="AddDoctorAbsence" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Dodaj dzień wolny</h5>
                 </div>
                 <p class="mb-1">Dodaj dzień kiedy jesteś niedostępny/a dla pacjentów.</p>
-                
+
+            </a>
+
+            <a class="list-group-item list-group-item-action flex-column align-items-start bg-warning">
+                Zarządzaj swoimi nieobecnościami... -> Nowy widok z listą (np. tylko absencjami > dzisiaj) + przycisk z Usuń
+            </a>
+
+            <a class="list-group-item list-group-item-action flex-column align-items-start bg-warning">
+                Może lista najbliższych nieobecności (zeby nie zapomniał) z jakąś ikonką czy czymś
+                <br/>- Wtorek, 15 stycznia
+                <br/>- Środa, 25 lutego
             </a>
         </div>  
     </div>
