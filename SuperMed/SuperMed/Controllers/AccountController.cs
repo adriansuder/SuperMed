@@ -133,13 +133,13 @@ namespace SuperMed.Controllers
 
                 if (signInResult.Succeeded)
                 {
-                    await _specializationsRepository.Add(
+                    await _specializationsRepository.AddSpecialization(
                         new Specialization
                         {
                             Name = model.Specialization
                         });
 
-                    var docsSpec = await _specializationsRepository.GetByName(model.Specialization);
+                    var docsSpec = await _specializationsRepository.GetSpecializationByUserName(model.Specialization);
 
                     var doctor = new Doctor
                     {

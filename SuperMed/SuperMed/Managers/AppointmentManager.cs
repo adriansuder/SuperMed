@@ -1,24 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace SuperMed.Managers
 {
-    public class AppointmentManager
+    public static class AppointmentManager
     {
-        public AppointmentManager()
-        {
-            var time = DateTime.Now;
-
-            // jezeli liczba appointments na ten dzien = 0 => ustaw: dzisiaj, 8:00
-            if (time.Hour < 8)
-            {
-
-            }
-        }
-
-        public List<DateTime> GenerateDateTimes(DateTime from)
+        public static List<DateTime> GenerateDateTimes(DateTime from)
         {
             var ret = new List<DateTime>();
 
@@ -49,7 +36,7 @@ namespace SuperMed.Managers
             return ret;
         }
 
-        public List<DateTime> GetNearest(DateTime from)
+        public static List<DateTime> GetAvailableDates(DateTime from)
         {
             var now = DateTime.Now;
 

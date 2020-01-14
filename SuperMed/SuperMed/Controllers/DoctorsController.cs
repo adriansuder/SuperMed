@@ -84,7 +84,7 @@ namespace SuperMed.Controllers
         [HttpGet]
         public IActionResult AddDoctorAbsence()
         {
-            var addDoctorAbsenceViewModel = new AddDoctorAbsenceViewModel()
+            var addDoctorAbsenceViewModel = new AddDoctorAbsenceViewModel
             {
                 AbsenceDate = DateTime.Today
             };
@@ -100,7 +100,7 @@ namespace SuperMed.Controllers
                 return View(model);
             }
 
-            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             
             var absence = new DoctorAbsence
             {

@@ -16,17 +16,12 @@ namespace SuperMed.DAL.Repositories
 
         public async Task<IEnumerable<Doctor>> GetAllDoctors()
         {
-            var docs = await _dbContext.Doctors.ToListAsync();
-            return docs;
+            var doctors = await _dbContext.Doctors.ToListAsync();
+            
+            return doctors;
         }
 
-        public async Task<Doctor> Get(int id)
-        {
-            //throw new System.NotImplementedException();
-            return await _dbContext.Doctors.FindAsync(id);
-        }
-
-        public async Task<Doctor> GetByName(string name)
+        public async Task<Doctor> GetDoctorByName(string name)
         {
             return await _dbContext.Doctors.FirstOrDefaultAsync(user => user.Name == name);
         }
@@ -35,17 +30,8 @@ namespace SuperMed.DAL.Repositories
         {
             _dbContext.Doctors.Add(doctor);
             await _dbContext.SaveChangesAsync();
+            
             return doctor;
-        }
-
-        public Task<Doctor> Update(Doctor patient)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Doctor> Delete(int id)
-        {
-            throw new System.NotImplementedException();
         }
     }
 }

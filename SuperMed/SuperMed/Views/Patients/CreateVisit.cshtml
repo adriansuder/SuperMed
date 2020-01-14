@@ -13,7 +13,7 @@
     <div class="form-group">
         <div class="col-md-10">
             @Html.DropDownListFor(m => m.DoctorName, Model.Doctors, "Wybierz doktora z listy dostępnych", new { @class = "form-control" })
-            
+
             @foreach (var error in ViewData.ModelState.FindKeysWithPrefix("doctorError"))
             {
                 <span class="text-danger float-right">@error.Value.Errors.FirstOrDefault()?.ErrorMessage</span>
@@ -24,13 +24,14 @@
             <div class="col-md-10">
                 <input asp-for="StartDateTime" class="form-control" />
                 <span asp-validation-for="StartDateTime" class="text-danger"></span>
-            </div>
+            </div> 
+            <br />
             <label asp-for="Description">Krótki opis</label>
             <div class="col-md-10">
                 <textarea type="text" asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
-            <br/><br/>
+            <br /><br />
             <div class="progress">
                 <div class="progress-bar" role="progressbar" style="width: 33%;" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">Krok 1</div>
             </div>

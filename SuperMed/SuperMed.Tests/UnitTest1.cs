@@ -14,9 +14,6 @@ namespace SuperMed.Tests
         [Test]
         public void Test1()
         {
-            AppointmentManager manager = new AppointmentManager();
-            manager.GenerateDateTimes(DateTime.Now);
-            var nearest = manager.GetNearest(DateTime.Now);
         }
     }
 }

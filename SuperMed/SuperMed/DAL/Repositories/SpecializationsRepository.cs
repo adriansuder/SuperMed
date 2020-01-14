@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using SuperMed.Models.Entities;
@@ -15,22 +14,17 @@ namespace SuperMed.DAL.Repositories
             this._dbContext = _dbContext;
         }
 
-        public Task<List<Specialization>> GetAll()
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<Specialization> Get(int id)
+        public async Task<Specialization> GetSpecializationById(int id)
         {
             return await _dbContext.Specializations.FirstOrDefaultAsync(i => i.Id == id);
         }
 
-        public async Task<Specialization> GetByName(string name)
+        public async Task<Specialization> GetSpecializationByUserName(string name)
         {
             return await _dbContext.Specializations.FirstOrDefaultAsync(user => user.Name == name);
         }
 
-        public async Task<Specialization> Add(Specialization specialization)
+        public async Task<Specialization> AddSpecialization(Specialization specialization)
         {
             var spec = _dbContext.Specializations.FirstOrDefault(s => s.Name == specialization.Name);
 
@@ -41,21 +35,6 @@ namespace SuperMed.DAL.Repositories
             }
 
             return spec;
-        }
-
-        public Task<Specialization> Update(Specialization specialization)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public Task<Specialization> Delete(int id)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<int> Commit()
-        {
-            return await _dbContext.SaveChangesAsync();
         }
     }
 }

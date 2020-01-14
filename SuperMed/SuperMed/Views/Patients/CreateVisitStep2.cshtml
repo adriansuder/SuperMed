@@ -11,14 +11,15 @@
 
 <hr />
 <form asp-controller="Patients" asp-action="CreateVisitStep3" method="post" class="form-group" role="form">
-
     <div class="row">
         <div class="col-sm-8">     
 
             @if (Model.Date.Count == 0)
             {
                 <div class="alert alert-warning" role="alert">
-                    Brak możliwości umówienia wizyty na ten dzień @Model.StartDateTime.ToString("D", new CultureInfo("PL-pl")). <br/>Wróć i wybierz inny dzień.
+                    Brak możliwości umówienia wizyty na ten dzień @Model.StartDateTime.ToString("D", new CultureInfo("PL-pl")). 
+                    <br/>
+                    Wróć i wybierz inny dzień.
                 </div>
             }
             else
@@ -39,7 +40,7 @@
                         @foreach (var date in Model.Date)
                         {
                         <div class="form-check form-check-inline">
-                            <input type="radio" asp-for="TimeOfDay" value="@date.ToShortTimeString()" /> @date.ToShortTimeString()
+                            <input type="radio" asp-for="TimeOfDay" value="@date.ToShortTimeString()" />&nbsp;&nbsp;@date.ToShortTimeString()
                         </div>
                         }
                     </div>

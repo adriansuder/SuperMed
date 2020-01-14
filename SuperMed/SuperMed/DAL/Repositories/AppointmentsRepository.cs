@@ -36,7 +36,6 @@ namespace SuperMed.DAL.Repositories
         {
             return _dbContext.Appointments
                 .Include("Doctor")
-                .Include("Patient")
                 .Where(a => a.Doctor.Name == docName
                             && a.StartDateTime.Year == date.Year 
                             && a.StartDateTime.Month == date.Month 
@@ -72,6 +71,11 @@ namespace SuperMed.DAL.Repositories
         {
             return GetByPatientName(patientName).Where(d => d.StartDateTime > DateTime.Now)
                 .OrderBy(d => d.StartDateTime).ToList();
+        }
+
+        public Task<Appointment> GetAppointmentById(int id)
+        {
+            return _dbContext.Appointments.Include("Doctor").Include("Patient").FirstOrDefaultAsync(a => a.Id == id);
         }
     }
 }

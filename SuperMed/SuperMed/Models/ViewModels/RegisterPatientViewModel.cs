@@ -31,7 +31,7 @@ namespace SuperMed.Models.ViewModels
         [DataType(DataType.Date)]
         public DateTime BirthDate { get; set; }
 
-        [Required(ErrorMessage = "Please select Gender")]
+        [Required(ErrorMessage = "Proszę wybrać płeć")]
         public Gender Gender { get; set; }
     }
 }
