@@ -1,7 +1,66 @@
-﻿@model SuperMed.Models.ViewModels.EditAppointmentViewModel
+﻿@using System.Globalization
+@using SuperMed.Models.Entities
+@model SuperMed.Models.ViewModels.EditAppointmentViewModel
 
-@if(@Model.IsDoctor){
-    <p>Doctor</p>
-}else{
-    <p>Patient</p>
+@{
+    ViewData["Title"] = "Widok wizyty";
 }
+
+
+<div class="card">
+    <h5 class="card-header">Podgląd Twojej wizyty z dnia <b>@Model.Appointment.StartDateTime.ToString("F", new CultureInfo("PL-pl"))</b></h5>
+    <div class="card-body">
+        <h5 class="card-title">lek. @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName</h5>
+        <p>
+            <h5>Opis:</h5>
+        </p>
+        <div class="card">
+            <div class="card-body">
+                <p class="card-text">@Model.Appointment.Description</p>
+            </div>
+        </div>
+
+        @if (Model.IsDoctor)
+        {
+            <form asp-controller="Appointments" asp-action="Save" method="post" class="form-group" role="form">
+                @Html.HiddenFor(a => a.Appointment.Id)
+                <p>
+                    <h4>Proszę wystawić opinię i wskazówki:</h4>
+                </p>
+                <div class="col-md-10">
+                    <textarea type="text" asp-for="Appointment.Review" class="form-control"></textarea>
+                    <span asp-validation-for="Appointment.Review" class="text-danger"></span>
+                </div>
+                <br/>
+                
+                @if (Model.Appointment.Status == Status.New)
+                {
+                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę"/>
+                }
+            </form>
+
+            <a asp-controller="Doctors" asp-action="Index">← Wróć</a>
+        }
+        else
+        {
+            <p>
+                <h4>Opinia i diagnoza wystawiona przez doktora:</h4>
+            </p>
+            <div class="col-md-10">
+                <textarea type="text" asp-for="Appointment.Review" class="form-control" disabled placeholder="Wypełnia lekarz."></textarea>
+                <span asp-validation-for="Appointment.Review" class="text-danger"></span>
+            </div>
+            <br />
+            @if (Model.Appointment.StartDateTime > DateTime.Now)
+            {
+
+                @Html.ActionLink("Odwołaj wizytę", "Delete",
+                    new { id = Model.Appointment.Id },
+                    new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "btn btn-warning float-right" })
+            }
+
+            <a asp-controller="Patients" asp-action="Index">← Wróć</a>
+
+        }
+    </div>
+</div>

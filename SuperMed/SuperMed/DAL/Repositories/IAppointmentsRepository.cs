@@ -18,5 +18,7 @@ namespace SuperMed.DAL.Repositories
         List<Appointment> GetPastPatientsAppointments(string patientName);
         List<Appointment> GetUpcommingPatientsAppointments(string patientName);
         Task<Appointment> GetAppointmentById(int id);
+        Task DeleteAppointmentById(int id);
+        Task FinishAppointment(Appointment appointment);
     }
 }

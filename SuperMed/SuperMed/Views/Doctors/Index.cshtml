@@ -18,13 +18,21 @@
             }
             else
             {
-                foreach (var modelAppointment in @Model.Appointments)
+                foreach (var modelAppointment in @Model.Appointments.OrderBy(a => a.StartDateTime))
                 {
+                    
+
                     <li class="list-group-item">
                         <button type="button" class="btn btn-danger">@modelAppointment.StartDateTime.ToString("t")</button>&nbsp;
                         @modelAppointment.Patient.FirstName
                         @modelAppointment.Patient.LastName
-                        <button type="button" class="btn btn-primary float-right">Otwórz</button>
+                        
+                        @{
+                            var imagePath = @"assets/" + modelAppointment.Status.ToString().ToLower() + ".png";
+                        }
+
+                        <img src="@imagePath"/>
+                        <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-info float-right">Otwórz</a>
                     </li>
                 }
             }

@@ -28,8 +28,6 @@
                                 @modelAppointment.Doctor.FirstName
                                 <div class="btn-group float-right" role="group" aria-label="Basic example">
                                         <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
-                                    
-                                    <button type="button" class="btn btn-danger">Odwołaj</button>
                                 </div>
                             </li>
                         }
@@ -50,7 +48,7 @@
                                 <button type="button" class="btn btn-outline-secondary disabled">@modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))</button>&nbsp;
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
-                                <button type="button" class="btn btn-info float-right">Zobacz</button>
+                                <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-outline-info float-right">Zobacz</a>
                             </li>
                         }
                     }

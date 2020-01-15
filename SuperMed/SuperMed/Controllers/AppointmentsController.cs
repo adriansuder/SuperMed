@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
 using SuperMed.DAL.Repositories;
+using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
 
 namespace SuperMed.Controllers
@@ -29,6 +30,7 @@ namespace SuperMed.Controllers
         }
 
         [HttpGet("{id}")]
+        [Route("Index")]
         public async Task<IActionResult> Index(int id)
         {
             var appointment = await _appointmentsRepository.GetAppointmentById(id);
@@ -47,6 +49,34 @@ namespace SuperMed.Controllers
             };
 
             return View(edit);
+        }
+
+        [HttpGet("{id}")]
+        [Route("Delete")]
+        public async Task<IActionResult> Delete(int id)
+        {
+            var appointmentToRemove = await _appointmentsRepository.GetAppointmentById(id);
+
+            if(appointmentToRemove.Patient.Name == User.Identity.Name)
+            {
+                await _appointmentsRepository.DeleteAppointmentById(id);
+            }
+
+            return RedirectToAction("Index", "Patients");
+        }
+
+        [HttpPost("{id}")]
+        [Route("Save")]
+        public async Task<IActionResult> Save(EditAppointmentViewModel model)
+        {
+            var appointment = await _appointmentsRepository.GetAppointmentById(model.Appointment.Id);
+
+            appointment.Review = model.Appointment.Review;
+            appointment.Status = Status.Finished;
+
+            await _appointmentsRepository.FinishAppointment(appointment);
+
+            return RedirectToAction("Index", "Doctors");
         }
     }
 }
