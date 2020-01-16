@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
 using SuperMed.DAL.Repositories;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
+using System.Threading.Tasks;
 
 namespace SuperMed.Controllers
 {

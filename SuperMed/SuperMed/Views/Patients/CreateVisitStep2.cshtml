@@ -4,6 +4,16 @@
 @{
     ViewData["Title"] = "Nowa wizyta - krok 2";
 }
+ 
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('input[type="radio"]').change(function() {
+            if ($('input[type="radio"]:checked').length > 0) {
+                $('#DelButton').prop('disabled', false);
+            }
+        });
+    });
+</script>
 
 <h3>Zarejestruj nową wizytę</h3>
 
@@ -52,11 +62,12 @@
         </div>
         <br />
     </div>
-
-    <div class="form-group">
-        <div class="col-md-2 col-md-10 mt-3">
-            <input type="submit" class="btn btn-primary" value="Idź do kroku 3" />
+    @if (Model.Date.Count != 0)
+    {
+        <div class="form-group">
+            <div class="col-md-2 col-md-10 mt-3">
+                <input type="submit" class="btn btn-primary float-right" value="Idź do kroku 3" id="DelButton" disabled/>
+            </div>
         </div>
-    </div>
-
+    }
 </form>
