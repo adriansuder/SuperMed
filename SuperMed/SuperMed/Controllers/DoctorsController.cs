@@ -34,7 +34,7 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var user = await _doctorsRepository.GetByName(User.Identity.Name);
+            var user = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             var doctorsViewModel = new DoctorsViewModel
             {
                 Appointments = _appointmentsRepository.GetTodaysAppointmentByDoctorName(user.Name),
@@ -54,7 +54,7 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> DoctorAppoinmentHistory()
         {
-            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             var doctorAppointmentHistoryViewModel = new DoctorAppointmentHistoryViewModel
             {
                 RealizedAppointments = _appointmentsRepository.GetDoctorsRealizedAppoinmentById(DateTime.Now,doctor.DoctorId)
@@ -72,7 +72,7 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> EditDoctorAbsences()
         {
-            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             var editDoctorAbsence = new EditDoctorAbsencesViewModel
             {
                 DoctorAbsences = _absenceRepository.GetDoctorAbsencesToEdit(doctor.DoctorId)
