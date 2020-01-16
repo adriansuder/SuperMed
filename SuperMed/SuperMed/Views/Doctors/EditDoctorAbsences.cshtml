@@ -1,0 +1,29 @@
+﻿@model SuperMed.Models.ViewModels.EditDoctorAbsencesViewModel;
+@{
+    ViewData["Title"] = "EditDoctorAbsences";
+}
+
+<h3>Doktorze, edytuj dodane nieobecności</h3>
+
+<a asp-controller="Doctors" asp-action="Index">← Wróć</a>
+
+<h4>Lista dodanych nieobecności</h4>
+<ul class="list-group">
+
+    @if (@Model.DoctorAbsences.Count == 0)
+    {
+        <li class="list-group-item">Nie masz jeszcze żadnych zaplanowanych nieobecności.</li>
+    }
+    else
+    {
+        foreach (var modelAbsence in @Model.DoctorAbsences)
+        {
+            <li class="list-group-item">
+                <button type="button" class="btn btn-primary">@modelAbsence.AbsenceDate.ToString("dd MMMM yyyy")</button>&nbsp;
+                Opis nieobecności: @modelAbsence.AbsenceDescription
+                <a asp-controller="Doctors" asp-action="DeleteDoctorAbsence" asp-route-id="@modelAbsence.DoctorAbsenceId" ><button type="button" class="btn btn-danger float-right">Usuń nieobecność</button></a>
+            </li>
+        }
+    }
+</ul>
+

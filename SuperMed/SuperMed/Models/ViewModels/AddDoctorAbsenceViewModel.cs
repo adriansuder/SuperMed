@@ -1,6 +1,8 @@
 ﻿using SuperMed.Attributes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using SuperMed.Models.Entities;
 
 namespace SuperMed.Models.ViewModels
 {
@@ -13,6 +15,7 @@ namespace SuperMed.Models.ViewModels
 
         [Required(ErrorMessage = "Krótki opis jest wymagany.")]
         public string AbsenceDescription { get; set; }
+        public List<DoctorAbsence> doctorAbsences {get; set;}
     }
 }
 

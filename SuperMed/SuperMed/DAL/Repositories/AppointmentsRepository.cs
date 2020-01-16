@@ -43,6 +43,17 @@ namespace SuperMed.DAL.Repositories
                             && a.StartDateTime.Day == date.Day).ToList();
         }
 
+        public List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int docId)
+        {
+            return _dbContext.Appointments
+                .Include("Doctor")
+                .Include("Patient")
+                .Where(a => a.Doctor.DoctorId == docId
+                            && a.StartDateTime.Year <= date.Year
+                            && a.StartDateTime.Month <= date.Month
+                            && a.StartDateTime.Day < date.Day).OrderByDescending(x => x.StartDateTime).ToList();
+        }
+
         public List<Appointment> GetByPatientName(string patientName)
         {
             return _dbContext.Appointments

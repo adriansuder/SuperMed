@@ -34,12 +34,14 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> Index()
         {
+            var user = await _doctorsRepository.GetByName(User.Identity.Name);
             var doctorsViewModel = new DoctorsViewModel
             {
-                Appointments = _appointmentsRepository.GetTodaysAppointmentByDoctorName(_userManager.GetUserName(User))
+                Appointments = _appointmentsRepository.GetTodaysAppointmentByDoctorName(user.Name),
+                NextDoctorsAbsences = _absenceRepository.GetNextDoctorAbsences(user.DoctorId)
             };
             
-            if (doctorsViewModel.Appointments.Count != 0)
+            if (doctorsViewModel.NextDoctorsAbsences.Count != 0)
             {
                 foreach (var appointment in doctorsViewModel.Appointments)
                 {
@@ -48,6 +50,35 @@ namespace SuperMed.Controllers
             }
 
             return View(doctorsViewModel);
+        }
+
+        public async Task<IActionResult> DoctorAppoinmentHistory()
+        {
+            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            var doctorAppointmentHistoryViewModel = new DoctorAppointmentHistoryViewModel
+            {
+                RealizedAppointments = _appointmentsRepository.GetDoctorsRealizedAppoinmentById(DateTime.Now,doctor.DoctorId)
+            };
+
+            if (doctorAppointmentHistoryViewModel.RealizedAppointments.Count != 0)
+            {
+                foreach (var appointment in doctorAppointmentHistoryViewModel.RealizedAppointments)
+                {
+                    appointment.Patient = await _patientsRepository.GetAppointmentByPatientId(appointment.PatientId);
+                }
+            }
+            return View(doctorAppointmentHistoryViewModel);
+        }
+
+        public async Task<IActionResult> EditDoctorAbsences()
+        {
+            var doctor = await _doctorsRepository.GetByName(User.Identity.Name);
+            var editDoctorAbsence = new EditDoctorAbsencesViewModel
+            {
+                DoctorAbsences = _absenceRepository.GetDoctorAbsencesToEdit(doctor.DoctorId)
+            };
+
+            return View(editDoctorAbsence);
         }
 
         [HttpGet]
@@ -80,6 +111,17 @@ namespace SuperMed.Controllers
 
             await _absenceRepository.AddAsync(absence);
 
+            return RedirectToAction("Index", "Home");
+        }
+        //[HttpPost]
+        public async Task<IActionResult> DeleteDoctorAbsence(int Id, EditDoctorAbsencesViewModel model) //int Id, EditDoctorAbsencesViewModel model
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            await _absenceRepository.DeleteAbsence(Id);
             return RedirectToAction("Index", "Home");
         }
     }

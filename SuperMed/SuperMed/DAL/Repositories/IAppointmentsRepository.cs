@@ -9,9 +9,10 @@ namespace SuperMed.DAL.Repositories
     {
         Task<Appointment> Add(Appointment appointment);
         List<Appointment> GetTodaysAppointmentByDoctorName(string docName);
-        List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string docName);
+        List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string docName); 
         List<Appointment> GetByPatientName(string docName);
         List<Appointment> GetPastPatientsAppointments(string patientName);
         List<Appointment> GetUpcommingPatientsAppointments(string patientName);
+        List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int docId);
     }
 }

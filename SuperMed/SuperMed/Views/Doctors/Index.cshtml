@@ -39,7 +39,7 @@
                 </div>
                 <p class="mb-1">Lista dostępnych opcji</p>
             </a>
-            <a asp-controller="Doctors" asp-action="AddDoctorAbsence" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a asp-controller="Doctors" asp-action="DoctorAppoinmentHistory" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Historia twoich wizyt</h5>
                 </div>
@@ -53,15 +53,35 @@
                 <p class="mb-1">Dodaj dzień kiedy jesteś niedostępny/a dla pacjentów.</p>
 
             </a>
+            <a asp-controller="Doctors" asp-action="EditDoctorAbsences" class="list-group-item list-group-item-action flex-column align-items-start">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Edytuj nieobecności</h5>
+                </div>
+                <p class="mb-1">W tym miejscu możesz usunąć zaplanowane nieobecności.</p>
 
-            <a class="list-group-item list-group-item-action flex-column align-items-start bg-warning">
-                Zarządzaj swoimi nieobecnościami... -> Nowy widok z listą (np. tylko absencjami > dzisiaj) + przycisk z Usuń
             </a>
 
-            <a class="list-group-item list-group-item-action flex-column align-items-start bg-warning">
-                Może lista najbliższych nieobecności (zeby nie zapomniał) z jakąś ikonką czy czymś
-                <br/>- Wtorek, 15 stycznia
-                <br/>- Środa, 25 lutego
+            <a class="list-group-item list-group-item-action flex-column align-items-start ">
+                <div class="d-flex w-100 justify-content-between">
+                    <h5 class="mb-1">Nadchodzące nieobecności</h5> 
+                </div>
+                <ul class="list-group">
+                    @if (@Model.NextDoctorsAbsences.Count() == 0)
+                    {
+                        <li class="list-group-item">
+                            Nie masz zaplanowanych nieobecności.
+                        </li>
+                    }
+                    else
+                    {
+                        @foreach (var absence in @Model.NextDoctorsAbsences)
+                        {
+                            <li class="list-group-item text-center">
+                                <i class="fas fa-calendar-times"></i> &nbsp;&nbsp; <b>@absence.AbsenceDate.ToString("dd MMMM yyyy")</b>
+                            </li>
+                        }
+                    }
+                </ul>
             </a>
         </div>  
     </div>
