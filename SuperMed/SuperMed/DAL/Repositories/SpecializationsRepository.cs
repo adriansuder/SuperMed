@@ -1,7 +1,8 @@
-﻿using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace SuperMed.DAL.Repositories
 {
@@ -14,14 +15,14 @@ namespace SuperMed.DAL.Repositories
             this._dbContext = _dbContext;
         }
 
-        public async Task<Specialization> GetSpecializationById(int id)
+        public async Task<Specialization> GetSpecializationById(int specializationId)
         {
-            return await _dbContext.Specializations.FirstOrDefaultAsync(i => i.Id == id);
+            return await _dbContext.Specializations.FirstOrDefaultAsync(i => i.Id == specializationId);
         }
 
-        public async Task<Specialization> GetSpecializationByUserName(string name)
+        public async Task<Specialization> GetSpecializationByUserName(string specializationName)
         {
-            return await _dbContext.Specializations.FirstOrDefaultAsync(user => user.Name == name);
+            return await _dbContext.Specializations.FirstOrDefaultAsync(user => user.Name == specializationName);
         }
 
         public async Task<Specialization> AddSpecialization(Specialization specialization)

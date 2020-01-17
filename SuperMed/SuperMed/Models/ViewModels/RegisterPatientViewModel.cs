@@ -1,37 +1,36 @@
-﻿using System;
+﻿using SuperMed.Models.Entities;
+using System;
 using System.ComponentModel.DataAnnotations;
-using SuperMed.Models.Entities;
 
 namespace SuperMed.Models.ViewModels
 {
     public class RegisterPatientViewModel
     {
-        [Required]
+        [Required(ErrorMessage = "Podaj swój login.")]
         public string Name { get; set; }
         
-        [Required]
+        [Required(ErrorMessage = "Imię jest wymagane.")]
         public string FirstName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Nazwisko jest wymagane.")]
         public string LastName { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "E-mail jest wymagany.")]
         [EmailAddress]
-        [Display(Name = "E-mail")]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Hasło jest wymagane.")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Required] 
+        [Required(ErrorMessage = "Numer telefonu jest wymagany.")] 
         public string Phone { get; set; }
         
-        [Required]
-        [DataType(DataType.Date)]
+        [Required(ErrorMessage = "Data urodzenia jest wymagana.")]
+        [DataType(DataType.Date, ErrorMessage = "Nieprawidłowy format daty.")]
         public DateTime BirthDate { get; set; }
 
-        [Required(ErrorMessage = "Proszę wybrać płeć")]
+        [Required(ErrorMessage = "Proszę wybrać płeć.")]
         public Gender Gender { get; set; }
     }
 }

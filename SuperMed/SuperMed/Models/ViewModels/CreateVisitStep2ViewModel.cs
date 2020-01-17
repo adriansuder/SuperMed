@@ -1,7 +1,7 @@
-﻿using System;
+﻿using SuperMed.Models.Entities;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using SuperMed.Models.Entities;
 
 namespace SuperMed.Models.ViewModels
 {

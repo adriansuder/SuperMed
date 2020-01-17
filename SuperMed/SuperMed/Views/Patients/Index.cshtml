@@ -23,11 +23,13 @@
                         foreach (var modelAppointment in @Model.GetUpcommingAppointments)
                         {
                             <li class="list-group-item">
-                                <button type="button" class="btn btn-outline-primary" style="min-width: 290px">@modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))</button>&nbsp;
+                                <button type="button" class="btn btn-outline-primary" style="min-width: 290px">
+                                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                                </button>&nbsp;
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
                                 <div class="btn-group float-right" role="group" aria-label="Basic example">
-                                        <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
+                                    <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
                                 </div>
                             </li>
                         }
@@ -36,21 +38,28 @@
             </div><div class="card-body">
                 <p class="card-text"><i>Poprzednie wizyty</i></p>
                 <ul class="card-text">
-                    @if (@Model.GetPastAppointments.Count == 0)
+                    @if (Model.GetPastAppointments.Count == 0)
                     {
                         <li class="list-group-item">Nie masz żadnych wizyt.</li>
                     }
                     else
                     {
-                        foreach (var modelAppointment in @Model.GetPastAppointments)
+                        foreach (var modelAppointment in Model.GetPastAppointments.Take(5))
                         {
                             <li class="list-group-item">
-                                <button type="button" class="btn btn-outline-secondary disabled" style="min-width: 290px">@modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))</button>&nbsp;
+                                <button type="button" class="btn btn-outline-secondary disabled" style="min-width: 290px">
+                                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                                </button>&nbsp;
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
-                                <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-outline-info float-right">Zobacz</a>
+                                <a asp-controller="Appointments" 
+                                   asp-action="Index" 
+                                   asp-route-Id="@modelAppointment.Id" 
+                                   class="btn btn-outline-info float-right">Zobacz</a>
                             </li>
                         }
+                        <br />
+                        <a class="btn btn-light float-right" asp-controller="Patients" asp-action="PatientAppointmentHistory">Historia wizyt</a>
                     }
                 </ul>
             </div>
@@ -70,7 +79,6 @@
                     <br />
                     Telefon: @Model.Patient.Phone
                     <br />
-
                     <br />
                     <a class="btn btn-light" asp-controller="Patients" asp-action="ChangeInfo">Zmień dane</a>
                 </p>

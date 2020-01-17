@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +9,9 @@ using Microsoft.Extensions.DependencyInjection;
 using SuperMed.Auth;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
+using SuperMed.DAL.Repositories.Interfaces;
+using SuperMed.Models.Entities;
+using System;
 
 namespace SuperMed
 {
@@ -20,14 +22,12 @@ namespace SuperMed
             Configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private IConfiguration Configuration { get; }
 
-        // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<CookiePolicyOptions>(options =>
             {
-                // This lambda determines whether user consent for non-essential cookies is needed for a given request.
                 options.CheckConsentNeeded = context => true;
                 options.MinimumSameSitePolicy = SameSiteMode.None;
             });
@@ -51,10 +51,13 @@ namespace SuperMed
                 options.AccessDeniedPath = "/Account/AccessDenied";
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddMvc(options =>
+            {
+                options.ModelBindingMessageProvider.SetValueMustNotBeNullAccessor(
+                    _ => "Wartość jest wymagana.");
+            }).SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(
             IApplicationBuilder app, 
             IHostingEnvironment env, 
@@ -91,24 +94,23 @@ namespace SuperMed
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var hasPatientRole = roleManager.RoleExistsAsync("Patient");
+            var hasPatientRole = roleManager.RoleExistsAsync(Roles.Patient);
             hasPatientRole.Wait();
 
             if (!hasPatientRole.Result)
             {
-                var createRoleResult = roleManager.CreateAsync(new IdentityRole("Patient"));
+                var createRoleResult = roleManager.CreateAsync(new IdentityRole(Roles.Patient));
                 createRoleResult.Wait();
             }
 
-            var hasDoctorRole = roleManager.RoleExistsAsync("Doctor");
+            var hasDoctorRole = roleManager.RoleExistsAsync(Roles.Doctor);
             hasDoctorRole.Wait();
 
             if (!hasDoctorRole.Result)
             {
-                var createRoleResult = roleManager.CreateAsync(new IdentityRole("Doctor"));
+                var createRoleResult = roleManager.CreateAsync(new IdentityRole(Roles.Doctor));
                 createRoleResult.Wait();
             }
-
         }
     }
 }

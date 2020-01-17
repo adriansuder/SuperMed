@@ -1,8 +1,4 @@
-﻿@using Microsoft.AspNetCore.Identity
-@using SuperMed.Auth
-@inject UserManager<ApplicationUser> _UserManager
-
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -19,7 +15,6 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute"
               crossorigin="anonymous"
               integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" />
-        <link rel="stylesheet" href="~/lib/font-awesome/css/all.css" />
 
     </environment>
     <link rel="stylesheet" href="~/css/site.css" />
@@ -29,17 +24,10 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-light bg-white border-bottom mb-3 p-3">
             <div class="container">
-                <a class="navbar-brand text-info" style="font-size: 32px;" asp-area="" asp-controller="Home" asp-action="Index"><b>SuperMed</b><i>system</i></a>
-
-                @if (User.Identity.IsAuthenticated)
-                {
-                    <span>Witaj <b>@_UserManager.GetUserName(User)</b>, miłego dnia!</span>
-                    <a asp-controller="Account" asp-action="Logout">Wyloguj się</a>
-                }
-                else
-                {
-                    <a asp-controller="Account" asp-action="Login">Logowanie</a>
-                }
+                <a class="navbar-brand text-info" style="font-size: 32px;" asp-area="" asp-controller="Home" asp-action="Index">
+                    <b>SuperMed</b><i>system</i>
+                </a>
+                <partial name="_LoginPartial"/>
             </div>
         </nav>
     </header>
@@ -55,6 +43,7 @@
             &copy; 2020 - SuperMed - <a asp-area="" asp-controller="Home" asp-action="Privacy">Polityka prywatności</a>
         </div>
     </footer>
+
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("Scripts", required: false)
 </body>

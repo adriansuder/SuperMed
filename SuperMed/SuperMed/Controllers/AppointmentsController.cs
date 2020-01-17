@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
-using SuperMed.DAL.Repositories;
+using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
 using System.Threading.Tasks;
@@ -33,6 +33,11 @@ namespace SuperMed.Controllers
             var appointment = await _appointmentsRepository.GetAppointmentById(id);
             var currentUser = _userManager.GetUserName(User);
             var isDoctor = await _doctorsRepository.GetDoctorByName(currentUser) != null;
+
+            if (appointment == null)
+            {
+                return RedirectToAction("AccessDenied", "Account");
+            }
 
             if (appointment.Patient.Name != currentUser && appointment.Doctor.Name != currentUser)
             {

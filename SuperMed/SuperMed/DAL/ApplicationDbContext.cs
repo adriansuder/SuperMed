@@ -7,19 +7,13 @@ namespace SuperMed.DAL
     public class ApplicationDbContext : IdentityDbContext
     {
         public ApplicationDbContext(DbContextOptions options) : base(options)
-        {
-            
-        }
+        { }
 
-        public DbSet<Patient> Patients { get; set; }
-
-        public DbSet<Doctor> Doctors { get; set; }
-
-        public DbSet<Specialization> Specializations { get; set; }
-
-        public DbSet<Appointment> Appointments { get; set; }
-        public DbSet<Address> Adresses { get; set; }
-        public DbSet<DoctorAbsence> DoctorsAbsences { get; set; }
+        public virtual DbSet<Appointment> Appointments { get; set; }
+        public virtual DbSet<Doctor> Doctors { get; set; }
+        public virtual DbSet<DoctorAbsence> DoctorsAbsences { get; set; }
+        public virtual DbSet<Patient> Patients { get; set; }
+        public virtual DbSet<Specialization> Specializations { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -32,9 +26,10 @@ namespace SuperMed.DAL
                 b.HasOne(x => x.Specialization);
             });
 
-
-
-            builder.Entity<Specialization>(b => { b.HasKey(x => x.Id); });
+            builder.Entity<Specialization>(b =>
+            {
+                b.HasKey(x => x.Id);
+            });
         }
     }
 }

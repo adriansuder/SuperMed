@@ -1,11 +1,13 @@
-﻿using System;
-using SuperMed.DAL;
+﻿using SuperMed.DAL;
+using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuperMed.Models.Entities
 {
     public class Appointment : IEntity
     {
         public int Id { get; set; }
+
         public DateTime StartDateTime { get; set; }
 
         public Status Status { get; set; }
@@ -23,7 +25,10 @@ namespace SuperMed.Models.Entities
 
     public enum Status
     {
+        [Display(Name = "Nowa")]
         New,
+
+        [Display(Name = "Zakończona")]
         Finished
     }
 }

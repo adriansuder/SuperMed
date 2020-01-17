@@ -1,16 +1,14 @@
-﻿using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
-using SuperMed.Models.Entities;
+﻿using Microsoft.AspNetCore.Identity;
+using System.Collections.Generic;
 
 namespace SuperMed.Auth
 {
-    public class ApplicationUser : IdentityUser
+    public sealed class ApplicationUser : IdentityUser
     {
         public string Name { get; set; }
 
         public bool? IsActive { get; set; }
         
-        public virtual ICollection<IdentityUserClaim<string>> Claims { get; } = new List<IdentityUserClaim<string>>();
-
+        public ICollection<IdentityUserClaim<string>> Claims { get; } = new List<IdentityUserClaim<string>>();
     }
 }

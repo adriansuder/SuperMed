@@ -1,7 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
+using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace SuperMed.DAL.Repositories
 {
@@ -21,14 +22,14 @@ namespace SuperMed.DAL.Repositories
             return doctors;
         }
 
-        public async Task<Doctor> GetDoctorByName(string name)
+        public async Task<Doctor> GetDoctorByName(string doctorName)
         {
-            return await _dbContext.Doctors.FirstOrDefaultAsync(user => user.Name == name);
+            return await _dbContext.Doctors.FirstOrDefaultAsync(user => user.Name == doctorName);
         }
 
-        public async Task<Doctor> Add(Doctor doctor)
+        public async Task<Doctor> AddDoctor(Doctor doctor)
         {
-            _dbContext.Doctors.Add(doctor);
+            await _dbContext.Doctors.AddAsync(doctor);
             await _dbContext.SaveChangesAsync();
             
             return doctor;

@@ -1,6 +1,4 @@
-using System;
-
-namespace SuperMed.Models
+namespace SuperMed.Models.ViewModels
 {
     public class ErrorViewModel
     {

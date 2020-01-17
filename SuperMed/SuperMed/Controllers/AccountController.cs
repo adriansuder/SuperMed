@@ -1,11 +1,11 @@
-﻿using System.Security.Claims;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
-using SuperMed.DAL.Repositories;
+using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SuperMed.Controllers
 {
@@ -54,7 +54,6 @@ namespace SuperMed.Controllers
                 return View(model);
             }
 
-            ViewData["AsWho"] = "Admin";
             return View("RegisterSuccessful");
         }
 
@@ -93,9 +92,8 @@ namespace SuperMed.Controllers
                         ApplicationUserID = user.Id
                     };
 
-                    await _patientsRepository.Add(patient);
+                    await _patientsRepository.AddPatient(patient);
 
-                    ViewData["AsWho"] = $"Patient" + _userManager.GetUserId(User);
                     return View("RegisterSuccessful");
                 }
             }
@@ -151,9 +149,8 @@ namespace SuperMed.Controllers
                         ApplicationUserID = user.Id
                     };
 
-                    await _doctorsRepository.Add(doctor);
-
-                    ViewData["AsWho"] = $"Doctor" + _userManager.GetUserId(User);
+                    await _doctorsRepository.AddDoctor(doctor);
+                    
                     return View("RegisterSuccessful");
                 }
             }
@@ -166,13 +163,13 @@ namespace SuperMed.Controllers
             return View(model);
         }
 
-        public IActionResult Login(string returnUrl)
+        public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login(LoginPatientViewModel model)
+        public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -183,7 +180,6 @@ namespace SuperMed.Controllers
 
             if (signInResult.Succeeded)
             {
-                ViewData["Status"] = $"Zalogowano";
                 return RedirectToAction("Index", "Home");
             }
 
@@ -199,7 +195,7 @@ namespace SuperMed.Controllers
             return RedirectToAction("Index", "Home");
         }
 
-        public IActionResult AccessDenied(string returnUrl)
+        public IActionResult AccessDenied()
         {
             return View();
         }

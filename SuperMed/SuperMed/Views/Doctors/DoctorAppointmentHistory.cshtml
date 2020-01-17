@@ -1,0 +1,39 @@
+﻿@using System.Globalization
+@model SuperMed.Models.ViewModels.DoctorAppointmentHistoryViewModel
+
+@{
+    ViewData["Title"] = "Historia Twoich wizyt";
+}
+
+<h3>Doktorze, sprawdź historię swoich wizyt</h3>
+
+<a asp-controller="Home" asp-action="Index">← Wróć</a>
+
+<ul class="list-group mt-3">
+    @if (Model.RealizedAppointments.Count == 0)
+    {
+        <li class="list-group-item">Nie masz jeszcze żadnych zrealizowanych wizyt.</li>
+    }
+    else
+    {
+        foreach (var modelAppointment in Model.RealizedAppointments)
+        {
+            <li class="list-group-item">
+                <button type="button" class="btn btn-outline-info" style="min-width: 280px;">
+                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                </button>&nbsp;
+                @modelAppointment.Patient.FirstName
+                @modelAppointment.Patient.LastName
+
+                @{
+                    var imagePath = @"../assets/" + modelAppointment.Status.ToString().ToLower() + ".png";
+                }
+
+                <img src="@imagePath" alt=""/>
+                <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-info float-right">
+                    Otwórz
+                </a>
+            </li>
+        }
+    }
+</ul>

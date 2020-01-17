@@ -1,15 +1,13 @@
-﻿@model SuperMed.Models.ViewModels.LoginPatientViewModel
+﻿@model SuperMed.Models.ViewModels.LoginViewModel
 @{
     ViewData["Title"] = "Logowanie";
 }
 
 <h1>Logowanie użytkownika</h1>
 
-<form asp-controller="Account" asp-action="Login" method="post" role="form" class="form-group container-fluid">
-
+<form asp-controller="Account" asp-action="Login" method="post" role="form" class="form-group">
     <h4>Zaloguj się do systemu</h4>
     <hr>
-
     <div class="form-group">
         <label asp-for="Name">Nazwa użytkownika</label>
         <div class="col-md-10">
@@ -27,8 +25,7 @@
 
     <div class="form-group">
         <div class="col-md-2 col-md-10">
-            <input type="submit" class="btn btn-primary" value="Zaloguj" />
+            <input type="submit" class="btn btn-primary float-right" value="Zaloguj" />
         </div>
     </div>
-
 </form>
