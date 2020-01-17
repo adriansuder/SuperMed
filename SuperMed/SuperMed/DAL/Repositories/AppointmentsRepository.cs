@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SuperMed.DAL.Repositories.Interfaces;
 
 namespace SuperMed.DAL.Repositories
 {
@@ -17,7 +18,7 @@ namespace SuperMed.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Appointment> Add(Appointment appointment)
+        public async Task<Appointment> AddAppointment(Appointment appointment)
         {
             await _dbContext.Appointments.AddAsync(appointment);
             await _dbContext.SaveChangesAsync();
@@ -25,76 +26,69 @@ namespace SuperMed.DAL.Repositories
             return appointment;
         }
 
-        public List<Appointment> GetTodaysAppointmentByDoctorName(string docName)
+        public List<Appointment> GetTodaysAppointmentByDoctorName(string doctorName)
         {
-            return  _dbContext.Appointments
+            return _dbContext.Appointments
                 .Include("Doctor")
                 .Include("Patient")
-                .Where(a => a.Doctor.Name == docName 
-                            && a.StartDateTime.ToString("d") == DateTime.Today.ToString("d"))
+                .Where(appointment => appointment.Doctor.Name == doctorName &&
+                                      appointment.StartDateTime.ToString("d") == DateTime.Today.ToString("d"))
                 .ToList();
         }
 
-        public List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string docName)
+        public List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string doctorName)
         {
             return _dbContext.Appointments
                 .Include("Doctor")
-                .Where(a => a.Doctor.Name == docName
-                            && a.StartDateTime.Year == date.Year 
-                            && a.StartDateTime.Month == date.Month 
-                            && a.StartDateTime.Day == date.Day)
+                .Where(appointment => appointment.Doctor.Name == doctorName &&
+                                      appointment.StartDateTime.Year == date.Year &&
+                                      appointment.StartDateTime.Month == date.Month &&
+                                      appointment.StartDateTime.Day == date.Day)
                 .ToList();
         }
 
-        public List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int docId)
+        public List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int doctorId)
         {
             return _dbContext.Appointments
                 .Include("Doctor")
                 .Include("Patient")
-                .Where(a => a.Doctor.DoctorId == docId
-                            && a.StartDateTime.Year <= date.Year
-                            && a.StartDateTime.Month <= date.Month
-                            && a.StartDateTime.Day < date.Day).OrderByDescending(x => x.StartDateTime).ToList();
-        }
-
-        public List<Appointment> GetByPatientName(string patientName)
-        {
-            return _dbContext.Appointments
-                .Include("Patient")
-                .Include("Doctor")
-                .Where(a => a.Patient.Name == patientName)
+                .Where(appointment => appointment.Doctor.DoctorId == doctorId &&
+                                      appointment.StartDateTime.Year <= date.Year &&
+                                      appointment.StartDateTime.Month <= date.Month &&
+                                      appointment.StartDateTime.Day < date.Day)
+                .OrderByDescending(x => x.StartDateTime)
                 .ToList();
         }
 
         public List<Appointment> GetPastPatientsAppointments(string patientName)
         {
-            return GetByPatientName(patientName)
-                .Where(d => d.StartDateTime < DateTime.Now)
-                .OrderByDescending(d => d.StartDateTime)
+            return GetAppointmentByPatientName(patientName)
+                .Where(appointment => appointment.StartDateTime < DateTime.Now)
+                .OrderByDescending(appointment => appointment.StartDateTime)
                 .ToList();
         }
 
         public List<Appointment> GetUpcommingPatientsAppointments(string patientName)
         {
-            return GetByPatientName(patientName)
-                .Where(d => d.StartDateTime > DateTime.Now)
-                .OrderBy(d => d.StartDateTime)
+            return GetAppointmentByPatientName(patientName)
+                .Where(appointment => appointment.StartDateTime > DateTime.Now)
+                .OrderBy(appointment => appointment.StartDateTime)
                 .ToList();
         }
 
-        public Task<Appointment> GetAppointmentById(int id)
+        public Task<Appointment> GetAppointmentById(int appointmentId)
         {
             return _dbContext.Appointments
                 .Include("Doctor")
                 .Include("Patient")
-                .FirstOrDefaultAsync(a => a.Id == id);
+                .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
         }
 
-        public async Task DeleteAppointmentById(int id)
+        public async Task DeleteAppointmentById(int appointmentId)
         {
-            var appointmentToDelete = await GetAppointmentById(id);
+            var appointmentToDelete = await GetAppointmentById(appointmentId);
             _dbContext.Appointments.Remove(appointmentToDelete);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
         }
 
         public async Task FinishAppointment(Appointment appointment)
@@ -102,6 +96,15 @@ namespace SuperMed.DAL.Repositories
             var entry = await GetAppointmentById(appointment.Id);
             _dbContext.Entry(entry).State = EntityState.Modified;
             await _dbContext.SaveChangesAsync(CancellationToken.None);
+        }
+
+        private IEnumerable<Appointment> GetAppointmentByPatientName(string patientName)
+        {
+            return _dbContext.Appointments
+                .Include("Patient")
+                .Include("Doctor")
+                .Where(appointment => appointment.Patient.Name == patientName)
+                .ToList();
         }
     }
 }

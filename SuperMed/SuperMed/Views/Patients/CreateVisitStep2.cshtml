@@ -21,14 +21,14 @@
 
 <hr />
 <form asp-controller="Patients" asp-action="CreateVisitStep3" method="post" class="form-group" role="form">
-    <div class="row">
-        <div class="col-sm-8">     
+    <div class="form-group">
+        <div class="col-md-10">
 
             @if (Model.Date.Count == 0)
             {
                 <div class="alert alert-warning" role="alert">
-                    Brak możliwości umówienia wizyty na ten dzień @Model.StartDateTime.ToString("D", new CultureInfo("PL-pl")). 
-                    <br/>
+                    Brak możliwości umówienia wizyty na ten dzień @Model.StartDateTime.ToString("D", new CultureInfo("PL-pl")).
+                    <br />
                     Wróć i wybierz inny dzień.
                 </div>
             }
@@ -39,8 +39,8 @@
                 @Html.HiddenFor(m => m.StartDateTime)
 
                 <h4>
-                    Rejestrujesz wizytę u doktora<br/>
-                    dr <b>@Model.Doctor.FirstName @Model.Doctor.LastName</b><br/>
+                    Rejestrujesz wizytę u doktora<br />
+                    dr <b>@Model.Doctor.FirstName @Model.Doctor.LastName</b><br />
                     na dzień <b>@Model.StartDateTime.ToString("D", new CultureInfo("PL-pl"))</b>
                 </h4>
 
@@ -49,9 +49,9 @@
                     <div class="col-md-10 mb-3">
                         @foreach (var date in Model.Date)
                         {
-                        <div class="form-check form-check-inline">
-                            <input type="radio" asp-for="TimeOfDay" value="@date.ToShortTimeString()" />&nbsp;&nbsp;@date.ToShortTimeString()
-                        </div>
+                            <div class="form-check form-check-inline">
+                                <input type="radio" asp-for="TimeOfDay" value="@date.ToShortTimeString()" />&nbsp;&nbsp;@date.ToShortTimeString()
+                            </div>
                         }
                     </div>
                     <div class="progress">
@@ -66,7 +66,7 @@
     {
         <div class="form-group">
             <div class="col-md-2 col-md-10 mt-3">
-                <input type="submit" class="btn btn-primary float-right" value="Idź do kroku 3" id="DelButton" disabled/>
+                <input type="submit" class="btn btn-primary float-right" value="Idź do kroku 3" id="DelButton" disabled />
             </div>
         </div>
     }

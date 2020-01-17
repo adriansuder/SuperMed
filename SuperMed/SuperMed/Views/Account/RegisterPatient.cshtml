@@ -4,18 +4,20 @@
     ViewData["Title"] = "Rejestracja pacjenta";
 }
 
-<h1>Register as a patient</h1>
+<h1>Zarejestruj się jako pacjent</h1>
 
-<form asp-controller="Account" asp-action="RegisterPatient" method="post" class="form" role="form">
-
-    <h4>Create account in SuperMed</h4>
+<form asp-controller="Account" asp-action="RegisterPatient" method="post" class="form-group" role="form">
     <hr>
-
     <div class="form-group">
         <label asp-for="Name">Nazwa użytkownika</label>
         <div class="col-md-10">
             <input asp-for="Name" class="form-control" />
             <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+        <label asp-for="Password">Hasło</label>
+        <div class="col-md-10">
+            <input asp-for="Password" class="form-control" />
+            <span asp-validation-for="Password" class="text-danger"></span>
         </div>
         <label asp-for="FirstName">Imię</label>
         <div class="col-md-10">
@@ -32,18 +34,12 @@
             <input asp-for="Email" class="form-control" />
             <span asp-validation-for="Email" class="text-danger"></span>
         </div>
-        <label asp-for="Password">Hasło</label>
-        <div class="col-md-10">
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
         <label asp-for="Phone">Telefon</label>
         <div class="col-md-10">
             <input asp-for="Phone" class="form-control" />
             <span asp-validation-for="Phone" class="text-danger"></span>
         </div>
-         
-        <label asp-for="BirthDate">Birth date</label>
+        <label asp-for="BirthDate">Data urodzenia</label>
         <div class="col-md-10">
             <input asp-for="BirthDate" class="form-control" />
             <span asp-validation-for="BirthDate" class="text-danger"></span>
@@ -51,17 +47,17 @@
         <label asp-for="Gender">Płeć</label>
         <div class="col-md-10">
             <select asp-for="Gender" asp-items="Html.GetEnumSelectList<Gender>()">
-                <option selected="selected" value="">Please select</option>
+                <option selected="selected" value="">Proszę wybrać płeć</option>
             </select>
         </div>
+        <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
 
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group">
         <div class="col-md-2 col-md-10">
-            <input type="submit" class="btn btn-primary" value="Register" />
+            <input type="submit" class="btn btn-primary float-right" value="Rejestruj" />
         </div>
     </div>
-
 </form>

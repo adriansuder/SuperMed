@@ -1,27 +1,23 @@
 ﻿@using Microsoft.Extensions.Configuration
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Strona główna";
 }
 
-@inject IConfiguration config;
+@inject IConfiguration config
 
-    <div class="text-center">
-        <h1 class="display-4">SuperMed<i>system</i></h1>
-        <hr />
-
-        @if (config["IsPublic"] == "false")
-    {
-        <a asp-controller="Account" asp-action="RegisterAdmin">Register Admin</a>
-    }
-
-    </div>
+<div class="text-center">
+    <h1 class="display-4">SuperMed<i>system</i></h1>
+    <hr />
+</div>
 <div class="container">
     <div class="d-flex align-content-center">
         <div class="card m-3 mx-auto" style="width: 18rem;">
             <img class="card-img-top" src="assets/docs.PNG" alt="Card image cap">
             <div class="card-body">
                 <p class="card-text">
-                    <a asp-controller="Account" asp-action="RegisterDoctor">Register Doctor</a>
+                    <a asp-controller="Account" asp-action="RegisterDoctor">
+                        Zarejestruj lekarza
+                    </a>
                 </p>
             </div>
         </div>
@@ -29,17 +25,26 @@
             <img class="card-img-top" src="assets/pats.PNG" alt="Card image cap">
             <div class="card-body">
                 <p class="card-text">
-                    <a asp-controller="Account" asp-action="RegisterPatient">Register Patient</a>
+                    <a asp-controller="Account" asp-action="RegisterPatient">
+                        Zarejestruj pacjenta
+                    </a>
                 </p>
             </div>
         </div>
-        <div class="card m-3 mx-auto" style="width: 18rem;">
-            <img class="card-img-top" src="assets/admin.PNG" alt="Card image cap">
-            <div class="card-body">
-                <p class="card-text">
-                    <a asp-controller="Account" asp-action="RegisterAdmin">Register Admin</a>
-                </p>
+
+        @if (config["IsPublic"] == "false")
+        {
+            <div class="card m-3 mx-auto" style="width: 18rem;">
+                <img class="card-img-top" src="assets/admin.PNG" alt="Card image cap">
+                <div class="card-body">
+                    <p class="card-text">
+                        <a asp-controller="Account" asp-action="RegisterAdmin">
+                            Zarejestruj administratora
+                        </a>
+                    </p>
+                </div>
             </div>
-        </div>
+        }
+
     </div>
 </div>

@@ -1,31 +1,27 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SuperMed.Auth;
-using SuperMed.DAL.Repositories;
+using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
-
+using System;
+using System.Threading.Tasks;
 
 namespace SuperMed.Controllers
 {
     [Authorize(Roles = "Doctor")]
     public class DoctorsController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAppointmentsRepository _appointmentsRepository;
         private readonly IPatientsRepository _patientsRepository;
         private readonly IAbsenceRepository _absenceRepository;
         private readonly IDoctorsRepository _doctorsRepository;
 
         public DoctorsController(
-            UserManager<ApplicationUser> userManager,
             IAppointmentsRepository appointmentsRepository,
-            IPatientsRepository patientsRepository, IAbsenceRepository absenceRepository, IDoctorsRepository doctorsRepository)
+            IPatientsRepository patientsRepository, 
+            IAbsenceRepository absenceRepository, 
+            IDoctorsRepository doctorsRepository)
         {
-            _userManager = userManager;
             _appointmentsRepository = appointmentsRepository;
             _patientsRepository = patientsRepository;
             _absenceRepository = absenceRepository;
@@ -45,14 +41,14 @@ namespace SuperMed.Controllers
             {
                 foreach (var appointment in doctorsViewModel.Appointments)
                 {
-                    appointment.Patient = await _patientsRepository.GetAppointmentByPatientId(appointment.PatientId);
+                    appointment.Patient = await _patientsRepository.GetPatientById(appointment.PatientId);
                 }
             }
 
             return View(doctorsViewModel);
         }
 
-        public async Task<IActionResult> DoctorAppoinmentHistory()
+        public async Task<IActionResult> DoctorAppointmentHistory()
         {
             var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             var doctorAppointmentHistoryViewModel = new DoctorAppointmentHistoryViewModel
@@ -64,9 +60,10 @@ namespace SuperMed.Controllers
             {
                 foreach (var appointment in doctorAppointmentHistoryViewModel.RealizedAppointments)
                 {
-                    appointment.Patient = await _patientsRepository.GetAppointmentByPatientId(appointment.PatientId);
+                    appointment.Patient = await _patientsRepository.GetPatientById(appointment.PatientId);
                 }
             }
+
             return View(doctorAppointmentHistoryViewModel);
         }
 
@@ -101,6 +98,9 @@ namespace SuperMed.Controllers
             }
 
             var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
+            var alreadyHasAbsence = await _absenceRepository.GetDoctorsAbscenceByDate(doctor.Name, model.AbsenceDate);
+
+            if (alreadyHasAbsence != null) return RedirectToAction("Index", "Home");
             
             var absence = new DoctorAbsence
             {
@@ -109,19 +109,17 @@ namespace SuperMed.Controllers
                 AbsenceDescription = model.AbsenceDescription
             };
 
-            await _absenceRepository.AddAsync(absence);
+            await _absenceRepository.AddAbsence(absence);
 
             return RedirectToAction("Index", "Home");
         }
-        //[HttpPost]
-        public async Task<IActionResult> DeleteDoctorAbsence(int Id, EditDoctorAbsencesViewModel model) //int Id, EditDoctorAbsencesViewModel model
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
 
-            await _absenceRepository.DeleteAbsence(Id);
+        [HttpGet("{id}")]
+        [Route("DeleteAbscence")]
+        public async Task<IActionResult> DeleteDoctorAbsence(int id)
+        {
+            await _absenceRepository.DeleteAbsence(id);
+            
             return RedirectToAction("Index", "Home");
         }
     }

@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using SuperMed.Auth;
+﻿using SuperMed.Auth;
 using SuperMed.DAL;
-using System.ComponentModel.DataAnnotations;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SuperMed.Models.Entities
@@ -21,10 +20,11 @@ namespace SuperMed.Models.Entities
         
         public int SpecializationId { get; set; }
         public Specialization Specialization { get; set; }
+        
         public string ApplicationUserID { get; set; }
         public ApplicationUser AplicationUser { get; set; }
 
-        public List<Appointment> Appointments { get; set; }
+        private List<Appointment> Appointments { get; }
 
         public Doctor()
         {

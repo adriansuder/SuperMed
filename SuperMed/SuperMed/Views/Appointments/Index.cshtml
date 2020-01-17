@@ -11,10 +11,12 @@
         Podgląd Twojej wizyty z dnia <b>@Model.Appointment.StartDateTime.ToString("F", new CultureInfo("PL-pl"))</b>
     </h5>
     @{
-        var status = Model.Appointment.Status == Status.New ? "btn btn-success" : "btn btn-danger";
+        var status = Model.Appointment.Status == Status.New ? "alert alert-success" : "alert alert-danger";
         var statusName = Model.Appointment.Status == Status.New ? "Nowa wizyta" : "Wizyta zakończona!";
     }
-    <button class="@status">@statusName</button>
+    <div class="@status" role="alert">
+        @statusName
+    </div>
     <div class="card-body">
         <h5 class="card-title">lek. @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName</h5>
         <p>
@@ -28,23 +30,23 @@
 
         @if (Model.IsDoctor)
         {
-    <form asp-controller="Appointments" asp-action="Save" method="post" class="form-group" role="form">
-        @Html.HiddenFor(a => a.Appointment.Id)
-        <p>
-            <h4>Proszę wystawić opinię i wskazówki:</h4>
-        </p>
-        <div class="col-md-10">
-            <textarea type="text" asp-for="Appointment.Review" class="form-control"></textarea>
-            <span asp-validation-for="Appointment.Review" class="text-danger"></span>
-        </div>
-        <br />
+            <form asp-controller="Appointments" asp-action="Save" method="post" class="form-group" role="form">
+                @Html.HiddenFor(a => a.Appointment.Id)
+                <p>
+                    <h4>Proszę wystawić opinię i wskazówki:</h4>
+                </p>
+                <div class="col-md-10">
+                    <textarea type="text" asp-for="Appointment.Review" class="form-control"></textarea>
+                    <span asp-validation-for="Appointment.Review" class="text-danger"></span>
+                </div>
+                <br />
 
-        @if (Model.Appointment.Status == Status.New)
-        {
-            <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę" />
-            <h6 class="float-right">Upewnij się, że chcesz zakończyć wizytę. Ta akcja jest nieodwracalna!</h6>
-        }
-    </form>
+                @if (Model.Appointment.Status == Status.New)
+                {
+                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę" />
+                    <h6 class="float-right">Upewnij się, że chcesz zakończyć wizytę. Ta akcja jest nieodwracalna!</h6>
+                }
+            </form>
 
             <a asp-controller="Doctors" asp-action="Index">← Wróć</a>
         }
@@ -58,16 +60,14 @@
                 <span asp-validation-for="Appointment.Review" class="text-danger"></span>
             </div>
             <br />
-            @if (Model.Appointment.StartDateTime > DateTime.Now)
+            @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.Status != Status.Finished)
             {
-
                 @Html.ActionLink("Odwołaj wizytę", "Delete",
                     new { id = Model.Appointment.Id },
                     new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "btn btn-warning float-right" })
             }
 
             <a asp-controller="Patients" asp-action="Index">← Wróć</a>
-
         }
     </div>
 </div>

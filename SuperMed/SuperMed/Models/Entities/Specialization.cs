@@ -1,6 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using SuperMed.DAL;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using SuperMed.DAL;
 
 namespace SuperMed.Models.Entities
 {

@@ -1,10 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
-using SuperMed.Models;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using SuperMed.Abstractions.Consts;
+using SuperMed.Models.ViewModels;
 
 namespace SuperMed.Controllers
 {
@@ -22,8 +21,8 @@ namespace SuperMed.Controllers
             if (User.Identity.IsAuthenticated)
             {
                 var currentUser = await _userManager.GetUserAsync(User);
-                var isPatient = await _userManager.IsInRoleAsync(currentUser, Roles.Patient);
-                var isDoctor = await _userManager.IsInRoleAsync(currentUser, Roles.Doctor);
+                var isPatient = await _userManager.IsInRoleAsync(currentUser, "Patient");
+                var isDoctor = await _userManager.IsInRoleAsync(currentUser, "Doctor");
 
                 if (isDoctor)
                 {
