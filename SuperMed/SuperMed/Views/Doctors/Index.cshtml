@@ -76,7 +76,7 @@
                     {
                         @foreach (var absence in Model.NextDoctorsAbsences)
                         {
-                            <li class="list-group-item bg-warning">
+                            <li class="list-group-item">
                                 <i class="fas fa-calendar-times"></i>&nbsp;&nbsp;<b>@absence.AbsenceDate.ToString("dd MMMM yyyy", new CultureInfo("PL-pl"))</b>
                             </li>
                         }
