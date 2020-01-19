@@ -3,6 +3,7 @@ using SuperMed.Models.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
@@ -19,16 +20,18 @@ namespace SuperMed.DAL.Repositories
 
         public async Task<DoctorAbsence> AddAbsence(DoctorAbsence doctorAbsence)
         {
-            await _dbContext.DoctorsAbsences.AddAsync(doctorAbsence);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.DoctorsAbsences.AddAsync(doctorAbsence, CancellationToken.None);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return doctorAbsence;
         }
 
         public async Task<DoctorAbsence> GetDoctorsAbscenceByDate(string doctorName, DateTime date)
         {
-            var doctorsAbscence = await _dbContext.DoctorsAbsences.FirstOrDefaultAsync(absence =>
-                absence.Doctor.Name == doctorName && absence.AbsenceDate == date);
+            var doctorsAbscence = await _dbContext.DoctorsAbsences
+                .FirstOrDefaultAsync(absence =>
+                absence.Doctor.Name == doctorName && absence.AbsenceDate == date,
+                    CancellationToken.None);
 
             return doctorsAbscence;
         }
@@ -51,12 +54,13 @@ namespace SuperMed.DAL.Repositories
 
         public async Task<DoctorAbsence> DeleteAbsence(int doctorAbsenceId)
         {
-            var doctorAbsence = _dbContext.DoctorsAbsences.FirstOrDefault(absence => absence.DoctorAbsenceId == doctorAbsenceId);
+            var doctorAbsence = _dbContext.DoctorsAbsences
+                .FirstOrDefault(absence => absence.DoctorAbsenceId == doctorAbsenceId);
 
             if (doctorAbsence != null)
             {
                 _dbContext.Remove(doctorAbsence);
-                await _dbContext.SaveChangesAsync();
+                await _dbContext.SaveChangesAsync(CancellationToken.None);
             }
 
             return doctorAbsence;

@@ -17,18 +17,22 @@ namespace SuperMed.DAL.Repositories
 
         public async Task<Patient> GetPatientById(int id)
         {
-            return await _dbContext.Patients.FindAsync(id);
+            return await _dbContext.Patients
+                .FirstOrDefaultAsync(patient => patient.PatientId == id,
+                CancellationToken.None);
         }
 
         public async Task<Patient> GetPatientByName(string patientName)
         {
-            return await _dbContext.Patients.FirstOrDefaultAsync(user => user.Name == patientName);
+            return await _dbContext.Patients
+                .FirstOrDefaultAsync(user => user.Name == patientName,
+                CancellationToken.None);
         }
 
         public async Task<Patient> AddPatient(Patient patient)
         {
-            _dbContext.Patients.Add(patient);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Patients.AddAsync(patient, CancellationToken.None);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
             
             return patient;
         }
@@ -36,8 +40,12 @@ namespace SuperMed.DAL.Repositories
         public async Task<Patient> Update(Patient patient)
         {
             var entry = await GetPatientById(patient.PatientId);
-            _dbContext.Entry(entry).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync(CancellationToken.None);
+            _dbContext.Attach(entry);
+
+            entry.Phone = patient.Phone;
+            entry.LastName = patient.LastName;
+
+            await _dbContext.SaveChangesAsync();
 
             return patient;
         }

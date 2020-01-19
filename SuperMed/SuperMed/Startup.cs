@@ -12,6 +12,9 @@ using SuperMed.DAL.Repositories;
 using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
+using Microsoft.AspNetCore.Localization;
 
 namespace SuperMed
 {
@@ -73,6 +76,13 @@ namespace SuperMed
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
+
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("pl-PL"),
+                SupportedCultures = new List<CultureInfo> {new CultureInfo("pl-PL")},
+                SupportedUICultures = new List<CultureInfo> {new CultureInfo("pl-PL")}
+            });
 
             app.UseAuthentication();
 
