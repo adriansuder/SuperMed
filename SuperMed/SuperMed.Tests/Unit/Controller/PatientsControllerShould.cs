@@ -1,15 +1,15 @@
-﻿using System;
-using System.Security.Claims;
-using Moq;
-using NUnit.Framework;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
-using System.Threading.Tasks;
-using FluentAssertions;
+﻿using FluentAssertions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Moq;
+using NUnit.Framework;
 using SuperMed.Controllers;
+using SuperMed.DAL.Repositories.Interfaces;
+using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
+using System;
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace SuperMed.Tests.Unit.Controller
 {
@@ -23,8 +23,6 @@ namespace SuperMed.Tests.Unit.Controller
         private Mock<IAppointmentsRepository> _appointmentsRepositoryMock;
 
         private Patient patient;
-        private Doctor doctor;
-        private Specialization specialization;
 
         [SetUp]
         public void Setup()
@@ -39,19 +37,6 @@ namespace SuperMed.Tests.Unit.Controller
             {
                 FirstName = "Testpatient",
                 LastName = "Testpatient"
-            };
-
-            specialization = new Specialization
-            {
-                Id = 1,
-                Name = "TestSpec"
-            };
-
-            doctor = new Doctor
-            {
-                FirstName = "Testdoctor",
-                LastName = "Testdoctor",
-                Specialization = specialization
             };
         }
 
@@ -85,6 +70,7 @@ namespace SuperMed.Tests.Unit.Controller
         {
             _absenceRepositoryMock.Setup(m => m.GetDoctorsAbscenceByDate(It.IsAny<string>(), It.IsAny<DateTime>()))
                 .ReturnsAsync(It.IsAny<DoctorAbsence>());
+            
             var sut = new PatientsController(
                 _patientsRepositoryMock.Object,
                 _doctorsRepositoryMock.Object,
@@ -104,7 +90,7 @@ namespace SuperMed.Tests.Unit.Controller
             };
 
             sut.ModelState.AddModelError("test", "test");
-
+            
             var result = await sut.CreateVisitStep2(new CreateVisitViewModel());
             result.Should().BeOfType<ViewResult>();
         }

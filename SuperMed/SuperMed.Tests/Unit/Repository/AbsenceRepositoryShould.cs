@@ -1,7 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿using AutoFixture;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Moq;
@@ -9,6 +6,9 @@ using NUnit.Framework;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
 using SuperMed.Models.Entities;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace SuperMed.Tests.Unit.Repository
 {
@@ -23,7 +23,11 @@ namespace SuperMed.Tests.Unit.Repository
         [SetUp]
         public void Setup()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName:"test").Options;
+            IFixture fixture = new Fixture();
+            var databaseName = fixture.Create<string>();
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName).Options;
 
             mockSet = new Mock<DbSet<DoctorAbsence>>();
 
@@ -31,16 +35,11 @@ namespace SuperMed.Tests.Unit.Repository
             mockContext.Setup(m => m.DoctorsAbsences).Returns(mockSet.Object);
             absenceRepository = new AbsenceRepository(mockContext.Object);
             
-            testDoctorAbsence = new DoctorAbsence
-            {
-                Doctor = new Doctor { Name = "test" },
-                AbsenceDate = DateTime.Now,
-                AbsenceDescription = "test description"
-            };
+            testDoctorAbsence = fixture.Create<DoctorAbsence>();
         }
 
         [Test]
-        public async Task AddAbsence()
+        public async Task CallAddAsyncAndSaveChangesAsyncOnce()
         {
             await absenceRepository.AddAbsence(testDoctorAbsence);
 
@@ -51,7 +50,11 @@ namespace SuperMed.Tests.Unit.Repository
         [Test]
         public async Task ShouldAddWriteToDatabase()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "test1").Options;
+            IFixture fixture = new Fixture();
+            var databaseName = fixture.Create<string>();
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName).Options;
 
             using (var context = new ApplicationDbContext(options))
             {
@@ -66,9 +69,13 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
-        public async Task RepoShouldAdd()
+        public async Task AddAbsenceToDatabase()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "test2").Options;
+            IFixture fixture = new Fixture();
+            var databaseName = fixture.Create<string>();
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName).Options;
 
             using (var context = new ApplicationDbContext(options))
             {
@@ -83,9 +90,13 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
-        public async Task RepoShouldReturn()
+        public async Task ReturnAbsenceFromDatabase()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>().UseInMemoryDatabase(databaseName: "test3").Options;
+            IFixture fixture = new Fixture();
+            var databaseName = fixture.Create<string>();
+
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName).Options;
 
             using (var context = new ApplicationDbContext(options))
             {

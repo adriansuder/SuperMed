@@ -4,9 +4,9 @@ using NUnit.Framework;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
 using SuperMed.Models.Entities;
-using System;
 using System.Linq;
 using System.Threading.Tasks;
+using AutoFixture;
 
 namespace SuperMed.Tests.Unit.Repository
 {
@@ -16,18 +16,18 @@ namespace SuperMed.Tests.Unit.Repository
         [Test]
         public async Task AddAppointmentToDatabase()
         {
+            IFixture fixture = new Fixture();
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
+            var databaseName = fixture.Create<string>();
+
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "appointmentTest1").Options;
+                .UseInMemoryDatabase(databaseName).Options;
 
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AppointmentsRepository(context);
-                await repository.AddAppointment(new Appointment
-                {
-                    Description = "test appointment",
-                    StartDateTime = DateTime.Now,
-                    Status = Status.New
-                });
+                await repository.AddAppointment(fixture.Create<Appointment>());
             }
 
             using (var context = new ApplicationDbContext(options))
@@ -39,18 +39,14 @@ namespace SuperMed.Tests.Unit.Repository
         [Test]
         public async Task DeleteAppointmentFromDatabase()
         {
-            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-                .UseInMemoryDatabase(databaseName: "appointmentTest2").Options;
+            IFixture fixture = new Fixture();
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+            var databaseName = fixture.Create<string>();
 
-            var appointment = new Appointment
-            {
-                Id = 1,
-                Description = "test appointment",
-                StartDateTime = DateTime.Now,
-                Status = Status.New,
-                Patient = new Patient { Name = "TestPatient "},
-                Doctor = new Doctor { Name = "Test Doctor"}
-            };
+            var options = new DbContextOptionsBuilder<ApplicationDbContext>()
+                .UseInMemoryDatabase(databaseName).Options;
+
+            var appointment = fixture.Create<Appointment>();
 
             using (var context = new ApplicationDbContext(options))
             {

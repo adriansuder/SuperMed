@@ -100,7 +100,8 @@ namespace SuperMed.Controllers
             var doctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name);
             var alreadyHasAbsence = await _absenceRepository.GetDoctorsAbscenceByDate(doctor.Name, model.AbsenceDate);
 
-            if (alreadyHasAbsence != null) return RedirectToAction("Index", "Home");
+            if (alreadyHasAbsence != null) 
+                return RedirectToAction("Index", "Home");
             
             var absence = new DoctorAbsence
             {

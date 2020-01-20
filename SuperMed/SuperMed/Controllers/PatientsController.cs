@@ -128,19 +128,6 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVisitStep3(CreateVisitStep2ViewModel model)
         {
-            var correctTime = AppointmentManager.GetAvailableTimes(model.StartDateTime);
-            var ccc = correctTime.Any(d => d.Date.ToString("d") == model.TimeOfDay.ToString("d"));
-            
-            if (!ccc)
-            {
-                ModelState.AddModelError("doctorError", "Niestety, wybrany lekarz jest w tym dniu niedostępny");
-            }
-
-            if (!ModelState.IsValid)
-            {
-
-            }
-
             var doctor = await _doctorsRepository.GetDoctorByName(model.DoctorName);
             var createVisitStep3ViewModel = new CreateVisitStep3ViewModel
             {
