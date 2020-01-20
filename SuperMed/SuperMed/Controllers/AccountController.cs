@@ -100,7 +100,14 @@ namespace SuperMed.Controllers
 
             foreach (var identityError in createUserResult.Errors)
             {
-                ModelState.AddModelError("", identityError.Description);
+                if (identityError.Code == "DuplicateUserName")
+                {
+                    ModelState.AddModelError("", "Ta nazwa użytkownika jest już zajęta.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", identityError.Description);
+                }
             }
 
             return View(model);
@@ -157,7 +164,14 @@ namespace SuperMed.Controllers
 
             foreach (var identityError in createUserResult.Errors)
             {
-                ModelState.AddModelError("", identityError.Description);
+                if (identityError.Code == "DuplicateUserName")
+                {
+                    ModelState.AddModelError("", "Ta nazwa użytkownika jest już zajęta.");
+                }
+                else
+                {
+                    ModelState.AddModelError("", identityError.Description);
+                }
             }
 
             return View(model);

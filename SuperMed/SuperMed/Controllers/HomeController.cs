@@ -1,28 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
-using SuperMed.Auth;
-using System.Diagnostics;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNetCore.Mvc;
 using SuperMed.Models.ViewModels;
+using System.Diagnostics;
 
 namespace SuperMed.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-
-        public HomeController(UserManager<ApplicationUser> userManager)
-        {
-            _userManager = userManager;
-        }
-
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
             if (User.Identity.IsAuthenticated)
             {
-                var currentUser = await _userManager.GetUserAsync(User);
-                var isPatient = await _userManager.IsInRoleAsync(currentUser, "Patient");
-                var isDoctor = await _userManager.IsInRoleAsync(currentUser, "Doctor");
+                var isPatient = User.IsInRole("Patient");
+                var isDoctor = User.IsInRole("Doctor");
 
                 if (isDoctor)
                 {

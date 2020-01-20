@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using SuperMed.Auth;
 using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Managers;
 using SuperMed.Models.Entities;
@@ -17,7 +15,6 @@ namespace SuperMed.Controllers
     [Authorize(Roles = "Patient")]
     public class PatientsController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IPatientsRepository _patientsRepository;
         private readonly IDoctorsRepository _doctorsRepository;
         private readonly ISpecializationsRepository _specializationsRepository;
@@ -25,14 +22,12 @@ namespace SuperMed.Controllers
         private readonly IAbsenceRepository _absenceRepository;
 
         public PatientsController(
-            UserManager<ApplicationUser> userManager, 
             IPatientsRepository patientsRepository,
             IDoctorsRepository doctorsRepository,
             ISpecializationsRepository specializationsRepository,
             IAppointmentsRepository appointmentsRepository,
             IAbsenceRepository absenceRepository)
         {
-            _userManager = userManager;
             _patientsRepository = patientsRepository;
             _doctorsRepository = doctorsRepository;
             _specializationsRepository = specializationsRepository;
@@ -133,19 +128,6 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateVisitStep3(CreateVisitStep2ViewModel model)
         {
-            var correctTime = AppointmentManager.GetAvailableTimes(model.StartDateTime);
-            var ccc = correctTime.Any(d => d.Date.ToString("d") == model.TimeOfDay.ToString("d"));
-            
-            if (!ccc)
-            {
-                ModelState.AddModelError("doctorError", "Niestety, wybrany lekarz jest w tym dniu niedostępny");
-            }
-
-            if (!ModelState.IsValid)
-            {
-
-            }
-
             var doctor = await _doctorsRepository.GetDoctorByName(model.DoctorName);
             var createVisitStep3ViewModel = new CreateVisitStep3ViewModel
             {
@@ -163,9 +145,8 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitVisit(CreateVisitStep3ViewModel model)
         {
-            var userName = _userManager.GetUserName(User);
             var doctor = await _doctorsRepository.GetDoctorByName(model.DoctorName);
-            var patient = await _patientsRepository.GetPatientByName(userName);
+            var patient = await _patientsRepository.GetPatientByName(User.Identity.Name);
 
             var appointment = new Appointment
             {
@@ -185,8 +166,7 @@ namespace SuperMed.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeInfo()
         {
-            var userName = _userManager.GetUserName(User);
-            var patient = await _patientsRepository.GetPatientByName(userName);
+            var patient = await _patientsRepository.GetPatientByName(User.Identity.Name);
 
             return View("ChangeInfo", patient);
         }
@@ -194,8 +174,7 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitChangedInfo(Patient patient)
         {
-            var userName = _userManager.GetUserName(User);
-            var actualPatient = await _patientsRepository.GetPatientByName(userName);
+            var actualPatient = await _patientsRepository.GetPatientByName(User.Identity.Name);
 
             actualPatient.LastName = patient.LastName;
             actualPatient.Phone = patient.Phone;
@@ -207,12 +186,11 @@ namespace SuperMed.Controllers
 
         public IActionResult PatientAppointmentHistory()
         {
-            var patientAppointmentHistoryViewModel = new PatientAppointmentHistoryViewModel
+            return View(new PatientAppointmentHistoryViewModel
             {
-                RealizedAppointments = _appointmentsRepository.GetPastPatientsAppointments(User.Identity.Name).ToList()
-            };
-
-            return View(patientAppointmentHistoryViewModel);
+                RealizedAppointments = _appointmentsRepository
+                    .GetPastPatientsAppointments(User.Identity.Name).ToList()
+            });
         }
     }
 }

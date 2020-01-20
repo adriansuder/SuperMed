@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+﻿@using SuperMed.Extensions
 @model SuperMed.Models.ViewModels.PatientViewModel
 @{
     ViewData["Title"] = "Panel pacjenta";
@@ -14,17 +14,17 @@
             <div class="card-body">
                 <p class="card-text"><i>Nadchodzące wizyty</i></p>
                 <ul class="card-text">
-                    @if (@Model.GetUpcommingAppointments.Count == 0)
+                    @if (Model.GetUpcommingAppointments.Count == 0)
                     {
                         <li class="list-group-item">Nie masz zaplanowanych żadnych wizyt.</li>
                     }
                     else
                     {
-                        foreach (var modelAppointment in @Model.GetUpcommingAppointments)
+                        foreach (var modelAppointment in Model.GetUpcommingAppointments)
                         {
                             <li class="list-group-item">
                                 <button type="button" class="btn btn-outline-primary" style="min-width: 290px">
-                                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                                    @modelAppointment.StartDateTime.ToString("f")
                                 </button>&nbsp;
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
@@ -48,7 +48,7 @@
                         {
                             <li class="list-group-item">
                                 <button type="button" class="btn btn-outline-secondary disabled" style="min-width: 290px">
-                                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                                    @modelAppointment.StartDateTime.ToString("f")
                                 </button>&nbsp;
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
@@ -73,9 +73,9 @@
                     Witamy, @Model.Patient.FirstName!
                     <br />
                     <br />
-                    @Model.Patient.FirstName @Model.Patient.LastName
+                    @Model.Patient.FirstName.Capitalize() @Model.Patient.LastName.Capitalize()
                     <br />
-                    @Model.Patient.Age lat (@Model.Patient.BirthDate.ToString("dd/MM/yyyy")), @Model.Patient.Gender
+                    @Model.Patient.Age lat (@Model.Patient.BirthDate.ToString("dd/MM/yyyy")), @Model.Patient.Gender.GetDisplayName()
                     <br />
                     Telefon: @Model.Patient.Phone
                     <br />

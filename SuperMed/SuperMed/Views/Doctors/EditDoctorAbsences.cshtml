@@ -20,7 +20,7 @@
         foreach (var modelAbsence in Model.DoctorAbsences)
         {
             <li class="list-group-item">
-                <button type="button" class="btn btn-primary">@modelAbsence.AbsenceDate.ToString("D", new CultureInfo("PL-pl"))</button>&nbsp;
+                <button type="button" class="btn btn-primary">@modelAbsence.AbsenceDate.ToString("D")</button>&nbsp;
                 @modelAbsence.AbsenceDescription
 
                 @Html.ActionLink("Usuń nieobecność", "DeleteDoctorAbsence",
