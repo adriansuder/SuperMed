@@ -1,77 +1,52 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System.Threading;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
 using System.Threading.Tasks;
+using SuperMed.Consts;
+using SuperMed.Services;
 
 namespace SuperMed.Controllers
 {
     [Authorize]
     public class AppointmentsController : Controller
     {
-        private readonly IAppointmentsRepository _appointmentsRepository;
-        private readonly IDoctorsRepository _doctorsRepository;
+        private readonly IAppService _appService;
 
-        public AppointmentsController(
-            IAppointmentsRepository appointmentsRepository,
-            IDoctorsRepository doctorsRepository)
+        public AppointmentsController(IAppService appService)
         {
-            _appointmentsRepository = appointmentsRepository;
-            _doctorsRepository = doctorsRepository;
+            _appService = appService;
         }
 
-        [HttpGet("{id}")]
-        [Route("Appointment")]
+        [HttpGet(nameof(ControllerRoutes.Id))]
+        [Route(nameof(ControllerRoutes.Appointment))]
         public async Task<IActionResult> Index(int id)
         {
-            var appointment = await _appointmentsRepository.GetAppointmentById(id);
-            var isDoctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name) != null;
-
-            if (appointment == null)
+            var model = await _appService.EditAppointment(id, User.Identity.Name, CancellationToken.None);
+                
+            if (model == null)
             {
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            if (appointment.Patient.Name != User.Identity.Name && appointment.Doctor.Name != User.Identity.Name)
-            {
-                return RedirectToAction("AccessDenied", "Account");
-            }
-
-            var edit = new EditAppointmentViewModel
-            {
-                Appointment = appointment,
-                IsDoctor = isDoctor
-            };
-
-            return View(edit);
+            return View(model);
         }
 
-        [HttpGet("{id}")]
-        [Route("DeleteAppointment")]
+        [HttpGet(nameof(ControllerRoutes.Id))]
+        [Route(nameof(ControllerRoutes.DeleteAppointment))]
         public async Task<IActionResult> Delete(int id)
         {
-            var appointmentToRemove = await _appointmentsRepository.GetAppointmentById(id);
-
-            if(appointmentToRemove.Patient.Name == User.Identity.Name)
-            {
-                await _appointmentsRepository.DeleteAppointmentById(id);
-            }
+            await _appService.DeleteAppointmentById(id, User.Identity.Name, CancellationToken.None);
 
             return RedirectToAction("Index", "Patients");
         }
 
-        [HttpPost("{id}")]
-        [Route("Save")]
+        [HttpPost(nameof(ControllerRoutes.Id))]
+        [Route(nameof(ControllerRoutes.Save))]
         public async Task<IActionResult> Save(EditAppointmentViewModel model)
         {
-            var appointment = await _appointmentsRepository.GetAppointmentById(model.Appointment.Id);
-
-            appointment.Review = model.Appointment.Review;
-            appointment.Status = Status.Finished;
-
-            await _appointmentsRepository.FinishAppointment(appointment);
-
+            await _appService.EditAppointment(model.Appointment.Id, model, CancellationToken.None);
+            
             return RedirectToAction("Index", "Doctors");
         }
     }

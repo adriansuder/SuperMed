@@ -1,5 +1,5 @@
-﻿@using SuperMed.Extensions
-@using SuperMed.Models.Entities
+﻿@using SuperMed.Entities
+@using SuperMed.Extensions
 @model SuperMed.Models.ViewModels.EditAppointmentViewModel
 
 @{
@@ -11,8 +11,8 @@
         Podgląd Twojej wizyty z dnia <b>@Model.Appointment.StartDateTime.ToString("F")</b>
     </h5>
     @{
-        var status = Model.Appointment.Status == Status.New ? "alert alert-success" : "alert alert-danger";
-        var statusName = Model.Appointment.Status == Status.New ? "Nowa wizyta" : "Wizyta zakończona!";
+        var status = Model.Appointment.AppointmentStatus == AppointmentStatus.New ? "alert alert-success" : "alert alert-danger";
+        var statusName = Model.Appointment.AppointmentStatus == AppointmentStatus.New ? "Nowa wizyta" : "Wizyta zakończona!";
     }
     <div class="@status" role="alert">
         @statusName
@@ -42,7 +42,7 @@
                 </div>
                 <br/>
 
-                @if (Model.Appointment.Status == Status.New)
+                @if (Model.Appointment.AppointmentStatus == AppointmentStatus.New)
                 {
                     <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę"/>
                     <h6 class="float-right">Upewnij się, że chcesz zakończyć wizytę. Ta akcja jest nieodwracalna!</h6>
@@ -61,7 +61,7 @@
                 <span asp-validation-for="Appointment.Review" class="text-danger"></span>
             </div>
             <br/>
-            @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.Status != Status.Finished)
+            @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.AppointmentStatus != AppointmentStatus.Finished)
             {
                 @Html.ActionLink("Odwołaj wizytę", "Delete",
                     new {id = Model.Appointment.Id},

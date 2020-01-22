@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using SuperMed.Models.Entities;
+using SuperMed.Entities;
 
 namespace SuperMed.DAL.Repositories.Interfaces
 {

@@ -24,10 +24,10 @@
                 @modelAbsence.AbsenceDescription
 
                 @Html.ActionLink("Usuń nieobecność", "DeleteDoctorAbsence",
-                    new { id = modelAbsence.DoctorAbsenceId },
+                    new { id = modelAbsence.Id },
                     new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać nieobecność?');", @class = "btn btn-warning float-right" })
 
-                <a asp-controller="Doctors" asp-action="DeleteDoctorAbsence" asp-route-id="@modelAbsence.DoctorAbsenceId">
+                <a asp-controller="Doctors" asp-action="DeleteDoctorAbsence" asp-route-id="@modelAbsence.Id">
                 </a>
             </li>
         }

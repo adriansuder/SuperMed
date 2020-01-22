@@ -1,4 +1,4 @@
-﻿using SuperMed.Models.Entities;
+﻿using SuperMed.Entities;
 using System.Threading.Tasks;
 
 namespace SuperMed.DAL.Repositories.Interfaces

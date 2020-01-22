@@ -1,5 +1,5 @@
-﻿using SuperMed.Models.Entities;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using SuperMed.Entities;
 
 namespace SuperMed.Models.ViewModels
 {

@@ -1,15 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SuperMed.Models.Entities;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using SuperMed.DAL.Repositories.Interfaces;
+using SuperMed.Entities;
 
 namespace SuperMed.DAL.Repositories
 {
-    public class AppointmentsRepository : IAppointmentsRepository
+    public class AppointmentsRepository : IRepository<Appointment>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -18,93 +17,138 @@ namespace SuperMed.DAL.Repositories
             _dbContext = dbContext;
         }
 
-        public async Task<Appointment> AddAppointment(Appointment appointment)
-        {
-            await _dbContext.Appointments.AddAsync(appointment, CancellationToken.None);
-            await _dbContext.SaveChangesAsync(CancellationToken.None);
+        //public async Task<Appointment> AddAppointment(Appointment appointment)
+        //{
+        //    await _dbContext.Appointments.AddAsync(appointment, CancellationToken.None);
+        //    await _dbContext.SaveChangesAsync(CancellationToken.None);
 
-            return appointment;
+        //    return appointment;
+        //}
+
+        //public List<Appointment> GetTodaysAppointmentByDoctorName(string doctorName)
+        //{
+        //    return _dbContext.Appointments
+        //        .Include("Doctor")
+        //        .Include("Patient")
+        //        .Where(appointment => appointment.Doctor.Name == doctorName &&
+        //                              appointment.StartDateTime.ToString("d") == DateTime.Today.ToString("d"))
+        //        .ToList();
+        //}
+
+        //public List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string doctorName)
+        //{
+        //    return _dbContext.Appointments
+        //        .Include("Doctor")
+        //        .Where(appointment => appointment.Doctor.Name == doctorName &&
+        //                              appointment.StartDateTime.Year == date.Year &&
+        //                              appointment.StartDateTime.Month == date.Month &&
+        //                              appointment.StartDateTime.Day == date.Day)
+        //        .ToList();
+        //}
+
+        //public List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int doctorId)
+        //{
+        //    return _dbContext.Appointments
+        //        .Include("Doctor")
+        //        .Include("Patient")
+        //        .Where(appointment => appointment.Doctor.DoctorId == doctorId &&
+        //                              appointment.StartDateTime.Year <= date.Year &&
+        //                              appointment.StartDateTime.Month <= date.Month &&
+        //                              appointment.StartDateTime.Day < date.Day)
+        //        .OrderByDescending(x => x.StartDateTime)
+        //        .ToList();
+        //}
+
+        //public List<Appointment> GetPastPatientsAppointments(string patientName)
+        //{
+        //    return GetAppointmentByPatientName(patientName)
+        //        .Where(appointment => appointment.StartDateTime < DateTime.Now)
+        //        .OrderByDescending(appointment => appointment.StartDateTime)
+        //        .ToList();
+        //}
+
+        //public List<Appointment> GetUpcommingPatientsAppointments(string patientName)
+        //{
+        //    return GetAppointmentByPatientName(patientName)
+        //        .Where(appointment => appointment.StartDateTime > DateTime.Now)
+        //        .OrderBy(appointment => appointment.StartDateTime)
+        //        .ToList();
+        //}
+
+        //public Task<Appointment> GetAppointmentById(int appointmentId)
+        //{
+        //    return _dbContext.Appointments
+        //        .Include("Doctor")
+        //        .Include("Patient")
+        //        .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
+        //}
+
+        //public async Task DeleteAppointmentById(int appointmentId)
+        //{
+        //    var appointmentToDelete = await GetAppointmentById(appointmentId);
+        //    _dbContext.Appointments.Remove(appointmentToDelete);
+        //    await _dbContext.SaveChangesAsync(CancellationToken.None);
+        //}
+
+        //public async Task FinishAppointment(Appointment appointment)
+        //{
+        //    var entry = await GetAppointmentById(appointment.Id);
+        //    _dbContext.Entry(entry).State = EntityState.Modified;
+        //    await _dbContext.SaveChangesAsync(CancellationToken.None);
+        //}
+
+        //private IEnumerable<Appointment> GetAppointmentByPatientName(string patientName)
+        //{
+        //    return _dbContext.Appointments
+        //        .Include("Patient")
+        //        .Include("Doctor")
+        //        .Where(appointment => appointment.Patient.Name == patientName)
+        //        .ToList();
+        //}
+
+        public async Task CreateAsync(Appointment item, CancellationToken cancellationToken)
+        {
+            await _dbContext.Appointments.AddAsync(item, cancellationToken).ConfigureAwait(false);
+            await SaveChangesAsync(cancellationToken);
         }
 
-        public List<Appointment> GetTodaysAppointmentByDoctorName(string doctorName)
+        public async Task<Appointment> GetAsync(int id, CancellationToken cancellationToken)
         {
-            return _dbContext.Appointments
-                .Include("Doctor")
+            return await _dbContext.Appointments
                 .Include("Patient")
-                .Where(appointment => appointment.Doctor.Name == doctorName &&
-                                      appointment.StartDateTime.ToString("d") == DateTime.Today.ToString("d"))
-                .ToList();
-        }
-
-        public List<Appointment> GetDoctorsAppointmentsByDate(DateTime date, string doctorName)
-        {
-            return _dbContext.Appointments
                 .Include("Doctor")
-                .Where(appointment => appointment.Doctor.Name == doctorName &&
-                                      appointment.StartDateTime.Year == date.Year &&
-                                      appointment.StartDateTime.Month == date.Month &&
-                                      appointment.StartDateTime.Day == date.Day)
-                .ToList();
+                .FirstOrDefaultAsync(a => a.Id == id, cancellationToken)
+                .ConfigureAwait(false);
         }
 
-        public List<Appointment> GetDoctorsRealizedAppoinmentById(DateTime date, int doctorId)
+        public Task<Appointment> GetAsync(string name, CancellationToken cancellationToken)
         {
-            return _dbContext.Appointments
-                .Include("Doctor")
-                .Include("Patient")
-                .Where(appointment => appointment.Doctor.DoctorId == doctorId &&
-                                      appointment.StartDateTime.Year <= date.Year &&
-                                      appointment.StartDateTime.Month <= date.Month &&
-                                      appointment.StartDateTime.Day < date.Day)
-                .OrderByDescending(x => x.StartDateTime)
-                .ToList();
+            throw new System.NotImplementedException();
         }
 
-        public List<Appointment> GetPastPatientsAppointments(string patientName)
+        public async Task DeleteAsync(Appointment item, CancellationToken cancellationToken)
         {
-            return GetAppointmentByPatientName(patientName)
-                .Where(appointment => appointment.StartDateTime < DateTime.Now)
-                .OrderByDescending(appointment => appointment.StartDateTime)
-                .ToList();
+            _dbContext.Appointments.Remove(item);
+            await SaveChangesAsync(cancellationToken);
         }
 
-        public List<Appointment> GetUpcommingPatientsAppointments(string patientName)
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            return GetAppointmentByPatientName(patientName)
-                .Where(appointment => appointment.StartDateTime > DateTime.Now)
-                .OrderBy(appointment => appointment.StartDateTime)
-                .ToList();
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public Task<Appointment> GetAppointmentById(int appointmentId)
+        public async Task<List<Appointment>> ListAsync(CancellationToken cancellationToken)
         {
-            return _dbContext.Appointments
-                .Include("Doctor")
-                .Include("Patient")
-                .FirstOrDefaultAsync(appointment => appointment.Id == appointmentId);
+            return await _dbContext.Appointments.Include("Patient").Include("Doctor").AsQueryable().ToListAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task DeleteAppointmentById(int appointmentId)
+        public async Task<Appointment> Update(Appointment item, CancellationToken cancellationToken)
         {
-            var appointmentToDelete = await GetAppointmentById(appointmentId);
-            _dbContext.Appointments.Remove(appointmentToDelete);
-            await _dbContext.SaveChangesAsync(CancellationToken.None);
-        }
-
-        public async Task FinishAppointment(Appointment appointment)
-        {
-            var entry = await GetAppointmentById(appointment.Id);
+            var entry = await GetAsync(item.Id, cancellationToken).ConfigureAwait(false);
             _dbContext.Entry(entry).State = EntityState.Modified;
-            await _dbContext.SaveChangesAsync(CancellationToken.None);
-        }
+            await _dbContext.SaveChangesAsync(cancellationToken);
 
-        private IEnumerable<Appointment> GetAppointmentByPatientName(string patientName)
-        {
-            return _dbContext.Appointments
-                .Include("Patient")
-                .Include("Doctor")
-                .Where(appointment => appointment.Patient.Name == patientName)
-                .ToList();
+            return item;
         }
     }
 }

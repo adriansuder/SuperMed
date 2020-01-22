@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SuperMed.Models.Entities;
+using SuperMed.Auth;
+using SuperMed.Entities;
 
 namespace SuperMed.DAL
 {
@@ -33,13 +34,16 @@ namespace SuperMed.DAL
             builder.Entity<Doctor>(b =>
             {
                 b.ToTable("Doctors");
-                b.HasKey(x => x.DoctorId);
+                b.HasKey(x => x.Id);
                 b.HasOne(x => x.Specialization);
+                b.HasOne(x => x.ApplicationUser);
             });
+
+            builder.Entity<Patient>(b => { b.HasOne(x => x.ApplicationUser); });
 
             builder.Entity<Specialization>(b =>
             {
-                b.HasKey(x => x.Id);
+                b.HasKey(x => x.SpecializationId);
             });
         }
     }

@@ -26,7 +26,7 @@
                 @modelAppointment.Patient.LastName.Capitalize()
 
                 @{
-                    var imagePath = @"../assets/" + modelAppointment.Status.ToString().ToLower() + ".png";
+                    var imagePath = @"../assets/" + modelAppointment.AppointmentStatus.ToString().ToLower() + ".png";
                 }
 
                 <img src="@imagePath" alt=""/>

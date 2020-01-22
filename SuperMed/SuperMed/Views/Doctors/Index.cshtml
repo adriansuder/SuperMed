@@ -1,4 +1,5 @@
-﻿@model SuperMed.Models.ViewModels.DoctorsViewModel
+﻿@using SuperMed.Extensions
+@model SuperMed.Models.ViewModels.DoctorsViewModel
 
 @{
     ViewData["Title"] = "Panel doktora";
@@ -22,10 +23,10 @@
                     <li class="list-group-item">
                         <button type="button" class="btn btn-outline-secondary">@modelAppointment.StartDateTime.ToString("t")</button>&nbsp;
                         @modelAppointment.Patient.FirstName
-                        @modelAppointment.Patient.LastName
+                        @modelAppointment.Patient.LastName.Capitalize()
 
                         @{
-                            var imagePath = @"assets/" + modelAppointment.Status.ToString().ToLower() + ".png";
+                            var imagePath = @"assets/" + modelAppointment.AppointmentStatus.ToString().ToLower() + ".png";
                         }
 
                         <img src="@imagePath" alt=""/>

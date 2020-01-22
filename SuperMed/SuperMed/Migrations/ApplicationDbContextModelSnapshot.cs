@@ -189,52 +189,23 @@ namespace SuperMed.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Address", b =>
-                {
-                    b.Property<int>("AddressId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("City");
-
-                    b.Property<string>("Country");
-
-                    b.Property<int?>("DoctorId");
-
-                    b.Property<int?>("PatientId");
-
-                    b.Property<string>("PostalCode");
-
-                    b.Property<int?>("PropertyNumber");
-
-                    b.Property<int>("StreetNumber");
-
-                    b.HasKey("AddressId");
-
-                    b.HasIndex("DoctorId");
-
-                    b.HasIndex("PatientId");
-
-                    b.ToTable("Adresses");
-                });
-
-            modelBuilder.Entity("SuperMed.Models.Entities.Appointment", b =>
+            modelBuilder.Entity("SuperMed.Entities.Appointment", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AppointmentStatus");
+
                     b.Property<string>("Description");
 
-                    b.Property<int>("DoctorId");
+                    b.Property<int?>("DoctorId");
 
-                    b.Property<int>("PatientId");
+                    b.Property<int?>("PatientId");
 
                     b.Property<string>("Review");
 
                     b.Property<DateTime>("StartDateTime");
-
-                    b.Property<int>("Status");
 
                     b.HasKey("Id");
 
@@ -245,13 +216,13 @@ namespace SuperMed.Migrations
                     b.ToTable("Appointments");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Doctor", b =>
+            modelBuilder.Entity("SuperMed.Entities.Doctor", b =>
                 {
-                    b.Property<int>("DoctorId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserID");
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<string>("FirstName");
 
@@ -263,18 +234,18 @@ namespace SuperMed.Migrations
 
                     b.Property<int>("SpecializationId");
 
-                    b.HasKey("DoctorId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserID");
+                    b.HasIndex("ApplicationUserId");
 
                     b.HasIndex("SpecializationId");
 
                     b.ToTable("Doctors");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.DoctorAbsence", b =>
+            modelBuilder.Entity("SuperMed.Entities.DoctorAbsence", b =>
                 {
-                    b.Property<int>("DoctorAbsenceId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -282,22 +253,22 @@ namespace SuperMed.Migrations
 
                     b.Property<string>("AbsenceDescription");
 
-                    b.Property<int>("DoctorId");
+                    b.Property<int?>("DoctorId");
 
-                    b.HasKey("DoctorAbsenceId");
+                    b.HasKey("Id");
 
                     b.HasIndex("DoctorId");
 
                     b.ToTable("DoctorsAbsences");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Patient", b =>
+            modelBuilder.Entity("SuperMed.Entities.Patient", b =>
                 {
-                    b.Property<int>("PatientId")
+                    b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("ApplicationUserID");
+                    b.Property<string>("ApplicationUserId");
 
                     b.Property<DateTime>("BirthDate");
 
@@ -311,22 +282,22 @@ namespace SuperMed.Migrations
 
                     b.Property<string>("Phone");
 
-                    b.HasKey("PatientId");
+                    b.HasKey("Id");
 
-                    b.HasIndex("ApplicationUserID");
+                    b.HasIndex("ApplicationUserId");
 
                     b.ToTable("Patients");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Specialization", b =>
+            modelBuilder.Entity("SuperMed.Entities.Specialization", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<int>("SpecializationId")
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Name");
 
-                    b.HasKey("Id");
+                    b.HasKey("SpecializationId");
 
                     b.ToTable("Specializations");
                 });
@@ -391,55 +362,41 @@ namespace SuperMed.Migrations
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Address", b =>
+            modelBuilder.Entity("SuperMed.Entities.Appointment", b =>
                 {
-                    b.HasOne("SuperMed.Models.Entities.Doctor", "Doctor")
-                        .WithMany()
+                    b.HasOne("SuperMed.Entities.Doctor", "Doctor")
+                        .WithMany("Appointments")
                         .HasForeignKey("DoctorId");
 
-                    b.HasOne("SuperMed.Models.Entities.Patient", "Patient")
-                        .WithMany()
+                    b.HasOne("SuperMed.Entities.Patient", "Patient")
+                        .WithMany("Appointments")
                         .HasForeignKey("PatientId");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Appointment", b =>
+            modelBuilder.Entity("SuperMed.Entities.Doctor", b =>
                 {
-                    b.HasOne("SuperMed.Models.Entities.Doctor", "Doctor")
-                        .WithMany("Appointments")
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.HasOne("SuperMed.Models.Entities.Patient", "Patient")
-                        .WithMany("Appointments")
-                        .HasForeignKey("PatientId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("SuperMed.Models.Entities.Doctor", b =>
-                {
-                    b.HasOne("SuperMed.Auth.ApplicationUser", "AplicationUser")
+                    b.HasOne("SuperMed.Auth.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserID");
+                        .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("SuperMed.Models.Entities.Specialization", "Specialization")
+                    b.HasOne("SuperMed.Entities.Specialization", "Specialization")
                         .WithMany()
                         .HasForeignKey("SpecializationId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.DoctorAbsence", b =>
+            modelBuilder.Entity("SuperMed.Entities.DoctorAbsence", b =>
                 {
-                    b.HasOne("SuperMed.Models.Entities.Doctor", "Doctor")
-                        .WithMany()
-                        .HasForeignKey("DoctorId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("SuperMed.Entities.Doctor", "Doctor")
+                        .WithMany("Absences")
+                        .HasForeignKey("DoctorId");
                 });
 
-            modelBuilder.Entity("SuperMed.Models.Entities.Patient", b =>
+            modelBuilder.Entity("SuperMed.Entities.Patient", b =>
                 {
-                    b.HasOne("SuperMed.Auth.ApplicationUser", "AplicationUser")
+                    b.HasOne("SuperMed.Auth.ApplicationUser", "ApplicationUser")
                         .WithMany()
-                        .HasForeignKey("ApplicationUserID");
+                        .HasForeignKey("ApplicationUserId");
                 });
 #pragma warning restore 612, 618
         }
