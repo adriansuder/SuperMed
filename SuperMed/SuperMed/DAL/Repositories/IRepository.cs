@@ -2,7 +2,7 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace SuperMed.DAL.Repositories.Interfaces
+namespace SuperMed.DAL.Repositories
 {
     public interface IRepository<T>
     {

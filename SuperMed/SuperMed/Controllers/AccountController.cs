@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
-using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Entities;
 using SuperMed.Models.ViewModels;
 using System.Security.Claims;

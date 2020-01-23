@@ -80,7 +80,7 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitChangedInfo(ChangePatientInfoViewModel changePatientInfoViewModel, CancellationToken cancellationToken)
         {
-            await _appService.SaveChangedPatientInfo(User.Identity.Name, changePatientInfoViewModel, CancellationToken.None);
+            await _appService.SaveChangedPatientInfo(User.Identity.Name, changePatientInfoViewModel, cancellationToken);
             
             return RedirectToAction("Index", "Home");
         }

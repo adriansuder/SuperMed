@@ -1,6 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SuperMed.DAL.Repositories;
-using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Entities;
 using SuperMed.Services;
 

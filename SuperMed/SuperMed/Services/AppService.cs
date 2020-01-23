@@ -1,13 +1,13 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using SuperMed.DAL.Repositories;
+using SuperMed.Entities;
+using SuperMed.Managers;
+using SuperMed.Models.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Entities;
-using SuperMed.Managers;
-using SuperMed.Models.ViewModels;
 
 namespace SuperMed.Services
 {
@@ -132,8 +132,10 @@ namespace SuperMed.Services
         {
             var doctor = await _doctorsRepository.GetAsync(name, cancellationToken).ConfigureAwait(false);
             var doctorsAbsences = await _absenceRepository.ListAsync(cancellationToken).ConfigureAwait(false);
+            var doctorsAppointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
 
-            if (doctorsAbsences.Any(a => a.AbsenceDate == modelAbsenceDate))
+            if (doctorsAbsences.Any(a => a.AbsenceDate == modelAbsenceDate) 
+                || doctorsAppointments.Any(a => a.Doctor.Name == name && a.StartDateTime.ToString("d") == modelAbsenceDate.ToString("d")))
             {
                 return;
             }

@@ -17,13 +17,18 @@ namespace SuperMed.Tests.Unit.Repository
     {
         private Mock<DbSet<DoctorAbsence>> mockSet;
         private Mock<ApplicationDbContext> mockContext;
-        private AbsenceRepository absenceRepository;
+        private IRepository<DoctorAbsence> absenceRepository;
         private DoctorAbsence testDoctorAbsence;
 
         [SetUp]
         public void Setup()
         {
-            IFixture fixture = new Fixture();
+            IFixture fixture = new Fixture(); 
+            
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
             var databaseName = fixture.Create<string>();
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -106,11 +111,11 @@ namespace SuperMed.Tests.Unit.Repository
 
             using (var context = new ApplicationDbContext(options))
             {
-                //var repository = new AbsenceRepository(context);
-                //var ret = await repository.GetAsync(testDoctorAbsence.Doctor.Id, testDoctorAbsence.AbsenceDate);
+                var repository = new AbsenceRepository(context);
+                var ret = await repository.GetAsync(testDoctorAbsence.Doctor.Name, CancellationToken.None);
 
-                //ret.AbsenceDate.Should().Be(testDoctorAbsence.AbsenceDate);
-                //ret.AbsenceDescription.Should().Be(testDoctorAbsence.AbsenceDescription);
+                ret.AbsenceDate.Should().Be(testDoctorAbsence.AbsenceDate);
+                ret.AbsenceDescription.Should().Be(testDoctorAbsence.AbsenceDescription);
             }
         }
     }

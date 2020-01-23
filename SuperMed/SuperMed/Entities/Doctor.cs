@@ -1,6 +1,5 @@
 ﻿using SuperMed.Auth;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SuperMed.Entities
 {

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SuperMed.Auth;
 using SuperMed.Entities;
 
 namespace SuperMed.DAL
