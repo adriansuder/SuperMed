@@ -20,14 +20,14 @@
         foreach (var modelAbsence in Model.DoctorAbsences)
         {
             <li class="list-group-item">
-                <button type="button" class="btn btn-primary">@modelAbsence.AbsenceDate.ToString("D", new CultureInfo("PL-pl"))</button>&nbsp;
+                <button  type="button" class="btn btn-primary">@modelAbsence.AbsenceDate.ToString("D", new CultureInfo("PL-pl"))</button>&nbsp;
                 @modelAbsence.AbsenceDescription
 
                 @Html.ActionLink("Usuń nieobecność", "DeleteDoctorAbsence",
                     new { id = modelAbsence.DoctorAbsenceId },
                     new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać nieobecność?');", @class = "btn btn-warning float-right" })
 
-                <a asp-controller="Doctors" asp-action="DeleteDoctorAbsence" asp-route-id="@modelAbsence.DoctorAbsenceId">
+                <a id="@modelAbsence.AbsenceDate.ToString("ddMMyyyy")" asp-controller="Doctors" asp-action="DeleteDoctorAbsence" asp-route-id="@modelAbsence.DoctorAbsenceId">
                 </a>
             </li>
         }

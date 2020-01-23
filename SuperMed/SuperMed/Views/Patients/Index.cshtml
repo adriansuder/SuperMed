@@ -9,7 +9,7 @@
         <div class="card">
             <h5 class="card-header">
                 Twoje wizyty
-                <a class="btn btn-primary float-right" asp-controller="Patients" asp-action="CreateVisit">Zarejestruj wizytę</a>
+                <a id ="addAppoinment" class="btn btn-primary float-right" asp-controller="Patients" asp-action="CreateVisit">Zarejestruj wizytę</a>
             </h5>
             <div class="card-body">
                 <p class="card-text"><i>Nadchodzące wizyty</i></p>
@@ -22,7 +22,7 @@
                     {
                         foreach (var modelAppointment in @Model.GetUpcommingAppointments)
                         {
-                            <li class="list-group-item">
+                            <li class="UpCommingAppoinments list-group-item">
                                 <button type="button" class="btn btn-outline-primary" style="min-width: 290px">
                                     @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
                                 </button>&nbsp;
