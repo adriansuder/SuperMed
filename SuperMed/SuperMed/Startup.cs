@@ -2,17 +2,17 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SuperMed.Auth;
 using SuperMed.DAL;
+using SuperMed.DI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
-using SuperMed.Extensions;
 
 namespace SuperMed
 {
@@ -110,7 +110,7 @@ namespace SuperMed
             var hasDoctorRole = roleManager.RoleExistsAsync("Doctor");
             hasDoctorRole.Wait();
 
-            if (!hasDoctorRole.Result)
+            if (hasDoctorRole.Result) return;
             {
                 var createRoleResult = roleManager.CreateAsync(new IdentityRole("Doctor"));
                 createRoleResult.Wait();

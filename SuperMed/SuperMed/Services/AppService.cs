@@ -92,7 +92,7 @@ namespace SuperMed.Services
             var appointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
             var absences = await _absenceRepository.ListAsync(cancellationToken).ConfigureAwait(false);
 
-            var doctorsAppointments = appointments.Where(a => a.Doctor.Id == doctor.Id).ToList();
+            var doctorsAppointments = appointments.Where(a => a.Doctor.Id == doctor.Id && a.StartDateTime.ToString("d") == DateTime.Today.ToString("d")).ToList();
             var doctorsAbsences = absences.Where(a => a.Doctor.Id == doctor.Id && a.AbsenceDate > date).OrderBy(a => a.AbsenceDate).Take(5).ToList();
 
             return new DoctorsViewModel
@@ -164,8 +164,8 @@ namespace SuperMed.Services
             return new PatientViewModel
             {
                 Patient = patient,
-                GetPastAppointments = patientsAppointments.Where(a => a.StartDateTime < DateTime.Today).OrderByDescending(a => a.StartDateTime).ToList(),
-                GetUpcommingAppointments = patientsAppointments.Where(a => a.StartDateTime >= DateTime.Today).OrderBy(a => a.StartDateTime).ToList()
+                GetPastAppointments = patientsAppointments.Where(a => a.Patient.Name == name && a.StartDateTime < DateTime.Today).OrderByDescending(a => a.StartDateTime).ToList(),
+                GetUpcommingAppointments = patientsAppointments.Where(a => a.Patient.Name == name && a.StartDateTime >= DateTime.Today).OrderBy(a => a.StartDateTime).ToList()
             };
         }
 
@@ -201,8 +201,7 @@ namespace SuperMed.Services
 
         public async Task<CreateVisitStep2ViewModel> CreateVisitStepTwo(CreateVisitViewModel model, CancellationToken cancellationToken)
         {
-            var doctors = await _doctorsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
-            var doctor = doctors.FirstOrDefault(d => d.Name == model.DoctorName);
+            var doctor = await _doctorsRepository.GetAsync(model.DoctorName, cancellationToken).ConfigureAwait(false);
 
             var doctorsAppointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
             var doctorsAppointmentsByDate = doctorsAppointments.Where(a =>
@@ -228,8 +227,7 @@ namespace SuperMed.Services
 
         public async Task<CreateVisitStep3ViewModel> CreateVisitStepThree(CreateVisitStep2ViewModel model, CancellationToken cancellationToken)
         {
-            var doctors = await _doctorsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
-            var doctor = doctors.FirstOrDefault(d => d.Name == model.DoctorName);
+            var doctor = await _doctorsRepository.GetAsync(model.DoctorName, cancellationToken).ConfigureAwait(false);
 
             return new CreateVisitStep3ViewModel
             {
@@ -244,14 +242,23 @@ namespace SuperMed.Services
 
         public async Task SubmitVisit(string name, CreateVisitStep3ViewModel model, CancellationToken cancellationToken)
         {
-            var doctors = await _doctorsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
-            var doctor = doctors.FirstOrDefault(d => d.Name == model.DoctorName);
+            var appointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
+            var doctor = await _doctorsRepository.GetAsync(model.DoctorName, cancellationToken).ConfigureAwait(false);
+            var startDateTime = new DateTime(model.StartDateTime.Year, model.StartDateTime.Month,
+                model.StartDateTime.Day, model.TimeOfDay.Hour, model.TimeOfDay.Minute, 0);
+
+            var hasAlready = appointments.Any(a => a.Doctor.Name == model.DoctorName && a.StartDateTime == startDateTime);
+
+            if (hasAlready)
+            {
+                throw new Exception("Doktor jest w tym czasie zajęty.");
+            }
+
             var patient = await _patientsRepository.GetAsync(name, cancellationToken);
 
             var appointment = new Appointment
             {
-                StartDateTime = new DateTime(model.StartDateTime.Year, model.StartDateTime.Month,
-                    model.StartDateTime.Day, model.TimeOfDay.Hour, model.TimeOfDay.Minute, 0),
+                StartDateTime = startDateTime,
                 Doctor = doctor,
                 Patient = patient,
                 AppointmentStatus = AppointmentStatus.New,
@@ -311,7 +318,7 @@ namespace SuperMed.Services
         {
             var doctorsAppointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
             var doctorsRealizedAppointments = doctorsAppointments
-                .Where(a => a.Doctor.Name == name && a.StartDateTime.Year <= DateTime.Now.Year &&
+                .Where(a => a.Patient.Name == name && a.StartDateTime.Year <= DateTime.Now.Year &&
                             a.StartDateTime.Month <= DateTime.Now.Month && a.StartDateTime.Day < DateTime.Now.Day)
                 .OrderByDescending(a => a.StartDateTime).ToList();
 

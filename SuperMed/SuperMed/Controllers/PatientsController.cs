@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Models.ViewModels;
+using SuperMed.Services;
 using System.Threading;
 using System.Threading.Tasks;
-using SuperMed.Services;
 
 namespace SuperMed.Controllers
 {
@@ -64,8 +64,15 @@ namespace SuperMed.Controllers
         [HttpPost]
         public async Task<IActionResult> SubmitVisit(CreateVisitStep3ViewModel model)
         {
-            await _appService.SubmitVisit(User.Identity.Name, model, CancellationToken.None);
-            
+            try
+            {
+                await _appService.SubmitVisit(User.Identity.Name, model, CancellationToken.None);
+            }
+            catch
+            {
+                return View("CreateVisitError");
+            }
+
             return RedirectToAction("Index", "Home");
         }
 

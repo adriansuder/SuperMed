@@ -3,11 +3,11 @@ using SuperMed.DAL.Repositories;
 using SuperMed.Entities;
 using SuperMed.Services;
 
-namespace SuperMed.Extensions
+namespace SuperMed.DI
 {
-    public static class ServiceCollectionExtension
+    public static class ApplicationModules
     {
-        public static IServiceCollection AddRepositories(this IServiceCollection services)
+        public static void AddRepositories(this IServiceCollection services)
         {
             services.AddScoped<IRepository<DoctorAbsence>, AbsenceRepository>();
             services.AddScoped<IRepository<Doctor>, DoctorsRepository>();
@@ -15,8 +15,6 @@ namespace SuperMed.Extensions
             services.AddScoped<IRepository<Appointment>, AppointmentsRepository>();
             services.AddScoped<IRepository<Patient>, PatientsRepository>();
             services.AddScoped<IAppService, AppService>();
-
-            return services;
         }
     }
 }

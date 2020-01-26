@@ -22,7 +22,8 @@ namespace SuperMed.DAL
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SuperMedDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+                    .UseSqlServer(
+                        "Server=(localdb)\\MSSQLLocalDB;Database=SuperMedDB;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -40,10 +41,7 @@ namespace SuperMed.DAL
 
             builder.Entity<Patient>(b => { b.HasOne(x => x.ApplicationUser); });
 
-            builder.Entity<Specialization>(b =>
-            {
-                b.HasKey(x => x.SpecializationId);
-            });
+            builder.Entity<Specialization>(b => { b.HasKey(x => x.SpecializationId); });
         }
     }
 }

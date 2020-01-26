@@ -18,8 +18,8 @@
         @statusName
     </div>
     <div class="card-body">
-        <h5 class="card-title">pacjent: @Model.Appointment.Patient.FirstName @Model.Appointment.Patient.LastName.Capitalize() (@Model.Appointment.Patient.Gender.GetDisplayName())</h5>
-        <h5 class="card-title">lekarz: @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName.Capitalize()</h5>
+        <h5 class="card-title">pacjent: @Model.Appointment.Patient.FirstName @Model.Appointment.Patient.LastName.Capitalize() (@Model.Appointment.Patient.Gender.GetDisplayName()), lat: @Model.Appointment.Patient.BirthDate.GetAge()</h5>
+        <h5 class="card-title">lekarz: @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName.Capitalize() (@Model.Appointment.Doctor.Specialization.Name)</h5>
         <p>
             <h5>Opis:</h5>
         </p>
@@ -40,16 +40,16 @@
                     <textarea type="text" asp-for="Appointment.Review" class="form-control"></textarea>
                     <span asp-validation-for="Appointment.Review" class="text-danger"></span>
                 </div>
-                <br/>
+                <br />
 
                 @if (Model.Appointment.AppointmentStatus == AppointmentStatus.New)
                 {
-                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę"/>
+                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę" />
                     <h6 class="float-right">Upewnij się, że chcesz zakończyć wizytę. Ta akcja jest nieodwracalna!</h6>
                 }
             </form>
 
-            <a asp-controller="Doctors" asp-action="DoctorAppointmentHistory">← Wróć</a>
+            <a href="#" onclick="back()">← Wróć</a>
         }
         else
         {
@@ -57,18 +57,31 @@
                 <h4>Opinia i diagnoza wystawiona przez doktora:</h4>
             </p>
             <div class="col-md-10">
-                <span class="form-control">@Model.Appointment.Review</span>
-                <span asp-validation-for="Appointment.Review" class="text-danger"></span>
+                <span>@Model.Appointment.Review</span>
+                @if (Model.Appointment.Review == null)
+                {
+
+                    <span class="text-danger">Wypełnia lekarz.</span>
+                }
+                else
+                {
+                    <span asp-validation-for="Appointment.Review" class="text-danger"></span>
+                }
             </div>
-            <br/>
+            <br />
             @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.AppointmentStatus != AppointmentStatus.Finished)
             {
                 @Html.ActionLink("Odwołaj wizytę", "Delete",
-                    new {id = Model.Appointment.Id},
-                    new {onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "btn btn-warning float-right"})
+                    new { id = Model.Appointment.Id },
+                    new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "btn btn-warning float-right" })
             }
 
-            <a asp-controller="Patients" asp-action="PatientAppointmentHistory">← Wróć</a>
+            <a href="#" onclick="back()">← Wróć</a>
         }
     </div>
+    <script>
+        function back() {
+            history.go(-1);
+        }
+    </script>
 </div>

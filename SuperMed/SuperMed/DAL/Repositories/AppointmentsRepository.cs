@@ -25,8 +25,9 @@ namespace SuperMed.DAL.Repositories
         public async Task<Appointment> GetAsync(int id, CancellationToken cancellationToken)
         {
             return await _dbContext.Appointments
-                .Include("Patient")
-                .Include("Doctor")
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
+                    .ThenInclude(a => a.Specialization)
                 .FirstOrDefaultAsync(a => a.Id == id, cancellationToken)
                 .ConfigureAwait(false);
         }
@@ -50,8 +51,8 @@ namespace SuperMed.DAL.Repositories
         public async Task<List<Appointment>> ListAsync(CancellationToken cancellationToken)
         {
             return await _dbContext.Appointments
-                .Include("Patient")
-                .Include("Doctor")
+                .Include(a => a.Patient)
+                .Include(a => a.Doctor)
                 .AsQueryable()
                 .ToListAsync(cancellationToken)
                 .ConfigureAwait(false);

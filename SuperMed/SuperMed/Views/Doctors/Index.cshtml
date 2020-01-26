@@ -5,6 +5,14 @@
     ViewData["Title"] = "Panel doktora";
 }
 
+<script>
+    function timedRefresh(timeoutPeriod) {
+        setTimeout("location.reload(true);", timeoutPeriod);
+    }
+
+    window.onload = timedRefresh(5000);
+</script>
+
 <div class="row">
     <div class="col-sm-8">
         <h3>Witamy panie doktorze, życzymy miłego dnia.</h3>
@@ -29,7 +37,7 @@
                             var imagePath = @"assets/" + modelAppointment.AppointmentStatus.ToString().ToLower() + ".png";
                         }
 
-                        <img src="@imagePath" alt=""/>
+                        <img src="@imagePath" alt="" />
                         <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-info float-right">Otwórz</a>
                     </li>
                 }
