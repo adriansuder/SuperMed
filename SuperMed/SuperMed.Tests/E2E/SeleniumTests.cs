@@ -10,20 +10,47 @@ using OpenQA.Selenium.Support.UI;
 using System.Linq;
 using SuperMed.Models.Entities;
 using SuperMed.DAL;
+//using OpenQA.Selenium.Firefox;
+using System.IO;
+using SuperMed.Tests.E2E.Pages;
 
 namespace SuperMed.Tests
 {
     public class SeleniumTests
     {
         [TestFixture]
-        public class FirstTests
+        public class SuperMedTests
         {
             IWebDriver _driver;
+            HomePage homePage;
+            RegisterPatientPage registerPatient;
+            RegisterSuccesfulPage registerSuccesfull;
+            LoginPage loginPage;
+            PatientIndexPage patientPage;
+            addAppoinmentPage addAppoinment;
+            addAppoinmentStep2 step2;
+            addAppoinmentStep3 step3;
+            DoctorIndexPage doctorIndexPage;
+            AddAbsencePage addAbsencePage;
+            EditAbsencePage editAbsencePage;
 
             [SetUp]
             public void StartBrowser()
             {
                 _driver = new ChromeDriver(@"C:\Users\adria\Desktop\REPOS\SuperMed\chromedriver_win32");
+                _driver.Manage().Window.Maximize();
+                homePage = new HomePage(_driver);
+                registerPatient = new RegisterPatientPage(_driver);
+                registerSuccesfull = new RegisterSuccesfulPage(_driver);
+                loginPage = new LoginPage(_driver);
+                patientPage = new PatientIndexPage(_driver);
+                addAppoinment = new addAppoinmentPage(_driver);
+                step2 = new addAppoinmentStep2(_driver);
+                step3 = new addAppoinmentStep3(_driver);
+                doctorIndexPage = new DoctorIndexPage(_driver);
+                addAbsencePage = new AddAbsencePage(_driver);
+                editAbsencePage = new EditAbsencePage(_driver);
+
             }
 
             [Test]
@@ -34,119 +61,92 @@ namespace SuperMed.Tests
                 var date = "01.01.1990";
                 var number = rnd.Next(500000000, 999999999).ToString();
 
-                _driver.Navigate().GoToUrl("https://localhost:44324");
-                _driver.FindElement(By.Id("registerPatient")).Click();
-                _driver.FindElement(By.Id("patientNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientPasswordInput")).SendKeys("!Supermed123");
-                _driver.FindElement(By.Id("patientFirstNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientLastNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientMailInput")).SendKeys(text + "@mail.pl");
-                _driver.FindElement(By.Id("patientPhoneInput")).SendKeys(number);
-                _driver.FindElement(By.Id("patientBirthdayInput")).SendKeys(date);
-                SelectElement select = new SelectElement(_driver.FindElement(By.Id("patientGenderSelect")));
-                select.SelectByText("mężczyzna");
-
-                IWebElement elementRegister = _driver.FindElement(By.ClassName("patientRegisterSubmit"));
-                Actions actions = new Actions(_driver);
-                actions.MoveToElement(elementRegister);
-                _driver.FindElement(By.ClassName("patientRegisterSubmit")).Click();
-                System.Threading.Thread.Sleep(1000);
-
-                _driver.FindElement(By.Id("openPatientsPanel")).Click();
-
-                StringAssert.EndsWith("https://localhost:44324/Patients", _driver.Url);
-                System.Threading.Thread.Sleep(1000);
+                homePage.GoToHomePage()
+                    .GoToRegisterPatientPage();
+                registerPatient.fillName(text)
+                    .fillPassword("!Supermed1")
+                    .fillFirstName(text)
+                    .fillLastName(text)
+                    .fillMail(text + "@mail.pl")
+                    .fillPhone(number)
+                    .fillBirthday(date)
+                    .fillGender("mężczyzna")
+                    .clickRegister();
+                Assert.That(registerSuccesfull.isRegisterSuccesfullInfoDisplayed, Is.True);
             }
             [Test]
-            public void RegisterPatient_ToShortPassword_ReturnError()
+            public void RegisterPatient_ToShortPassword_ReturnValidationError()
             {
                 Random rnd = new Random();
                 var text = Guid.NewGuid().ToString();
                 var date = "01.01.1990";
                 var number = rnd.Next(500000000, 999999999).ToString();
 
-                _driver.Navigate().GoToUrl("https://localhost:44324");
-                _driver.FindElement(By.Id("registerPatient")).Click();
-                _driver.FindElement(By.Id("patientNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientPasswordInput")).SendKeys("abc");
-                _driver.FindElement(By.Id("patientFirstNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientLastNameInput")).SendKeys(text);
-                _driver.FindElement(By.Id("patientMailInput")).SendKeys(text + "@mail.pl");
-                _driver.FindElement(By.Id("patientPhoneInput")).SendKeys(number);
-                _driver.FindElement(By.Id("patientBirthdayInput")).SendKeys(date);
-                SelectElement select = new SelectElement(_driver.FindElement(By.Id("patientGenderSelect")));
-                select.SelectByText("mężczyzna");
-                IWebElement elementRegister = _driver.FindElement(By.ClassName("patientRegisterSubmit"));
-                Actions actions = new Actions(_driver);
-                actions.MoveToElement(elementRegister);
-                _driver.FindElement(By.ClassName("patientRegisterSubmit")).Click();
-                var validationDiv = _driver.FindElement(By.ClassName("validation-summary-errors"));
-                if (validationDiv.Displayed)
-                {
-                    List<IWebElement> webElems = new List<IWebElement>
-                    {
-                        _driver.FindElement(By.XPath("//li[contains(text(), '6 characters.')]")),
-                        _driver.FindElement(By.XPath("//li[contains(text(), 'alphanumeric character')]")),
-                        _driver.FindElement(By.XPath("//li[contains(text(), 'at least one digit')]")),
-                        _driver.FindElement(By.XPath("//li[contains(text(), 'at least one uppercase')]"))
-                    };
-                    Assert.That(webElems.Count == 4);
-                    StringAssert.EndsWith("https://localhost:44324/Account/RegisterPatient", _driver.Url);
-                }
-                else
-                {
-                    Assert.That(validationDiv.Displayed == true);
-                }
-                
+                homePage.GoToHomePage()
+                    .GoToRegisterPatientPage();
+                registerPatient.fillName(text)
+                    .fillPassword("abc")
+                    .fillFirstName(text)
+                    .fillLastName(text)
+                    .fillMail(text + "@mail.pl")
+                    .fillPhone(number)
+                    .fillBirthday(date)
+                    .fillGender("mężczyzna")
+                    .clickRegister();
+                Assert.That(registerPatient.isValidationErrorDisplayed, Is.True);
             }
 
             [Test]
             public void LoginPatient_AddAppoinmentOnAvailableDate_Succes()
             {
-                var testDate = "24.04.2020";
                 //change date on every test, second test call will return false
-                var Name = "testPatient1";
+                var testDate = "08.02.2020";
+                var name = "testPatient2";
                 var description = "Podstawowa wizyta stomatologiczna";
-                _driver.Navigate().GoToUrl("https://localhost:44324/Account/Login");
-                _driver.FindElement(By.Id("Name")).SendKeys(Name);
-                _driver.FindElement(By.Id("Password")).SendKeys("!Supermed123");
-                _driver.FindElement(By.ClassName("btn-primary")).Click();
-                var count = _driver.FindElements(By.CssSelector(".UpCommingAppoinments")).ToList().Count;
-                _driver.FindElement(By.XPath("//a[contains(text(), 'Zarejestruj wizytę')]")).Click();
-                StringAssert.StartsWith(_driver.Url, "https://localhost:44324/Patients/CreateVisit");
-                SelectElement select = new SelectElement(_driver.FindElement(By.Id("DoctorName")));
-                select.SelectByText("Stomatolog - Jan Kowalski");
-                _driver.FindElement(By.Id("StartDateTime")).SendKeys(testDate);
-                _driver.FindElement(By.Id("Description")).SendKeys(description);
-                _driver.FindElement(By.Id("GoToStep2")).Click();
-                _driver.FindElement(By.CssSelector("input[value='11:00']")).Click();
-                _driver.FindElement(By.Id("DelButton")).Click(); //Go to Step 3
-                _driver.FindElement(By.CssSelector("input[type='submit']")).Click();
-                Assert.That(_driver.FindElements(By.CssSelector(".UpCommingAppoinments")).ToList().Count == (count + 1));
-                StringAssert.StartsWith(_driver.Url, "https://localhost:44324/Patients");
+                var password = "!SuperMed123";
+                var selectDoctor = "Stomatolog - Jan Kowalski";
+
+                homePage.GoToHomePage()
+                    .GoToLoginPage();
+                loginPage.fillUserName(name)
+                    .fillUserPassword(password)
+                    .ClickLogin();
+                var count = _driver.FindElements(By.CssSelector("li.UpCommingAppoinments")).ToList().Count;
+                patientPage.GoTo_addAppoinmentPage();
+                addAppoinment.fillDate(testDate)
+                    .fillDescription(description)
+                    .selectDoctor(selectDoctor)
+                    .GoToStep2();
+                step2.selectHour()
+                    .GoToStep3();
+                step3.clickConfirm();
+                StringAssert.EndsWith(_driver.Url, "https://localhost:44324/Patients");
+                Assert.That(_driver.FindElements(By.CssSelector("li.UpCommingAppoinments")).ToList().Count == (count + 1));
             }
 
             [Test]
             public void LoginDoctor_AddAbsenceAndDeleteAbsence_Succesful()
             {
-                var Name = "doctor2";
-                var absenceDate = "25.06.2020";
-                string date = absenceDate.Replace(".", string.Empty);
-                _driver.Navigate().GoToUrl("https://localhost:44324");
-                _driver.FindElement(By.LinkText("Logowanie")).Click();
-                _driver.FindElement(By.Id("Name")).SendKeys(Name);
-                _driver.FindElement(By.Id("Password")).SendKeys("!SuperMed1");
-                _driver.FindElement(By.ClassName("btn-primary")).Click();
-                _driver.FindElement(By.Id("addAbsenceButton")).Click();
-                _driver.FindElement(By.Id("AbsenceDate")).SendKeys(absenceDate); 
-                _driver.FindElement(By.Id("AbsenceDescription")).SendKeys("Wyjazd na szkolenie");
-                _driver.FindElement(By.CssSelector("input[value='Dodaj']")).Click(); 
-                _driver.FindElement(By.Id("editAbsences")).Click();
-                IWebElement deleteButton = _driver.FindElement(By.Id(date));
-                Actions actions = new Actions(_driver);
-                actions.MoveToElement(deleteButton);
-                deleteButton.Click();
-                System.Threading.Thread.Sleep(5000);
+                var name = "doctor2";
+                var password = "!SuperMed1";
+                var absenceDate = "22.06.2020";
+                var description = "Wyjazd na szkolenie";
+                var dateElementId = absenceDate.Replace(".", string.Empty);
+
+                homePage.GoToHomePage()
+                    .GoToLoginPage();
+                loginPage.fillUserName(name)
+                    .fillUserPassword(password)
+                    .ClickLogin();
+                doctorIndexPage.GoToAddAbsencePage();
+                addAbsencePage.fillAbsenceDate(absenceDate)
+                    .fillAbsenceDescription(description)
+                    .addAbsenceClick();
+                Assert.That(doctorIndexPage.isAbsenceDisplayedOnIndexPage(dateElementId), Is.True);
+                doctorIndexPage.GoToEditAbsencePage();
+                editAbsencePage.clickOnDeleteButton(dateElementId)
+                    .acceptAlert();
+                Assert.That(doctorIndexPage.isAbsenceDisplayedOnIndexPage(dateElementId), Is.False);
 
             }
 
