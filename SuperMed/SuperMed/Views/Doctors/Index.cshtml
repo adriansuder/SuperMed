@@ -49,13 +49,13 @@
                 </div>
                 <p class="mb-1">Zobacz historię swoich wizyt.</p>
             </a>
-            <a asp-controller="Doctors" asp-action="AddDoctorAbsence" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a id="addAbsenceButton" asp-controller="Doctors" asp-action="AddDoctorAbsence" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Dodaj dzień wolny</h5>
                 </div>
                 <p class="mb-1">Dodaj dzień nieobecności.</p>
             </a>
-            <a asp-controller="Doctors" asp-action="EditDoctorAbsences" class="list-group-item list-group-item-action flex-column align-items-start">
+            <a asp-controller="Doctors" id="editAbsences" asp-action="EditDoctorAbsences" class="list-group-item list-group-item-action flex-column align-items-start">
                 <div class="d-flex w-100 justify-content-between">
                     <h5 class="mb-1">Edytuj nieobecności</h5>
                 </div>
@@ -76,8 +76,8 @@
                     {
                         @foreach (var absence in Model.NextDoctorsAbsences)
                         {
-                            <li class="list-group-item bg-warning">
-                                <i class="fas fa-calendar-times"></i>&nbsp;&nbsp;<b>@absence.AbsenceDate.ToString("dd MMMM yyyy")</b>
+                            <li id="@absence.AbsenceDate.ToString("ddMMyyyy")" class="list-group-item">
+                                <i class="fas fa-calendar-times"></i>&nbsp;&nbsp;<b>@absence.AbsenceDate.ToString("dd MMMM yyyy", new CultureInfo("PL-pl"))</b>
                             </li>
                         }
                     }

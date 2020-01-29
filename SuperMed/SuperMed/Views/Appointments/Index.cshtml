@@ -64,8 +64,8 @@
             @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.Status != Status.Finished)
             {
                 @Html.ActionLink("Odwołaj wizytę", "Delete",
-                    new {id = Model.Appointment.Id},
-                    new {onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "btn btn-warning float-right"})
+                    new { id = Model.Appointment.Id },
+                    new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "cancellVisit btn btn-warning float-right" })
             }
 
             <a asp-controller="Patients" asp-action="PatientAppointmentHistory">← Wróć</a>
