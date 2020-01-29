@@ -92,12 +92,15 @@ namespace SuperMed.Services
             var appointments = await _appointmentsRepository.ListAsync(cancellationToken).ConfigureAwait(false);
             var absences = await _absenceRepository.ListAsync(cancellationToken).ConfigureAwait(false);
 
-            var doctorsAppointments = appointments.Where(a => a.Doctor.Id == doctor.Id && a.StartDateTime.ToString("d") == DateTime.Today.ToString("d")).ToList();
+            var today = appointments.Where(a => a.Doctor.Id == doctor.Id && a.StartDateTime.ToString("d") == date.ToString("d")).ToList();
+            var tomorrow = appointments.Where(a =>  a.Doctor.Id == doctor.Id && a.StartDateTime.ToString("d") == date.AddDays(1).ToString("d")).ToList();
+            today.AddRange(tomorrow);
+
             var doctorsAbsences = absences.Where(a => a.Doctor.Id == doctor.Id && a.AbsenceDate > date).OrderBy(a => a.AbsenceDate).Take(5).ToList();
 
             return new DoctorsViewModel
             {
-                Appointments = doctorsAppointments,
+                Appointments = today,
                 NextDoctorsAbsences = doctorsAbsences
             };
         }

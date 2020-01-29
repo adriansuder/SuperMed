@@ -18,15 +18,43 @@
         <h3>Witamy panie doktorze, życzymy miłego dnia.</h3>
         <h6>Dzisiaj jest <em>@DateTime.Now.ToString("D")</em></h6>
         <hr />
-        <h4>Lista wizyt na dzisiaj:</h4>
+        <h4>Lista wizyt dzisiaj:</h4>
         <ul class="list-group">
-            @if (Model.Appointments.Count == 0)
+
+            @if (Model.Appointments.Where(a => a.StartDateTime.ToString("d") == DateTime.Today.ToString("d")).ToList().Count == 0)
             {
                 <li class="list-group-item">Nie masz dzisiaj żadnych wizyt.</li>
             }
             else
             {
-                foreach (var modelAppointment in Model.Appointments.OrderBy(a => a.StartDateTime))
+                foreach (var modelAppointment in Model.Appointments.Where(a => a.StartDateTime.ToString("d") == DateTime.Today.ToString("d")).OrderBy(a => a.StartDateTime))
+                {
+                    <li class="list-group-item">
+                        <button type="button" class="btn btn-outline-secondary">@modelAppointment.StartDateTime.ToString("t")</button>&nbsp;
+                        @modelAppointment.Patient.FirstName
+                        @modelAppointment.Patient.LastName.Capitalize()
+
+                        @{
+                            var imagePath = @"assets/" + modelAppointment.AppointmentStatus.ToString().ToLower() + ".png";
+                        }
+
+                        <img src="@imagePath" alt="" />
+                        <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-info float-right">Otwórz</a>
+                    </li>
+                }
+            }
+        </ul>
+        <br />
+        <h4>Lista wizyt jutro:</h4>
+        <ul class="list-group">
+
+            @if (Model.Appointments.Where(a => a.StartDateTime.ToString("d") == DateTime.Today.AddDays(1).ToString("d")).ToList().Count == 0)
+            {
+                <li class="list-group-item">Nie masz jutro żadnych wizyt.</li>
+            }
+            else
+            {
+                foreach (var modelAppointment in Model.Appointments.Where(a => a.StartDateTime.ToString("d") == DateTime.Today.AddDays(1).ToString("d")).OrderBy(a => a.StartDateTime))
                 {
                     <li class="list-group-item">
                         <button type="button" class="btn btn-outline-secondary">@modelAppointment.StartDateTime.ToString("t")</button>&nbsp;
@@ -86,7 +114,7 @@
                         @foreach (var absence in Model.NextDoctorsAbsences)
                         {
                             <li id="@absence.AbsenceDate.ToString("ddMMyyyy")" class="list-group-item">
-                                <i class="fas fa-calendar-times"></i>&nbsp;&nbsp;<b>@absence.AbsenceDate.ToString("dd MMMM yyyy", new CultureInfo("PL-pl"))</b>
+                                <i class="fas fa-calendar-times"></i>&nbsp;&nbsp;<b>@absence.AbsenceDate.ToString("dd MMMM yyyy")</b>
                             </li>
                         }
                     }
