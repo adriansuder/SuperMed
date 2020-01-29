@@ -56,6 +56,7 @@ namespace SuperMed.Tests
             }
 
             [Test]
+            [Category("E2E")]
             public void RegisterPatient_ValidData_OpenPatientPanel()
             {
                 Random rnd = new Random();
@@ -76,7 +77,9 @@ namespace SuperMed.Tests
                     .clickRegister();
                 Assert.That(registerSuccesfull.isRegisterSuccesfullInfoDisplayed, Is.True);
             }
+
             [Test]
+            [Category("E2E")]
             public void RegisterPatient_ToShortPassword_ReturnValidationError()
             {
                 Random rnd = new Random();
@@ -99,6 +102,7 @@ namespace SuperMed.Tests
             }
 
             [Test]
+            [Category("E2E")]
             public void LoginPatient_AddAndDeleteAppoinment_Succes()
             {
                 var testDate = "11.02.2020";
@@ -133,6 +137,7 @@ namespace SuperMed.Tests
             }
 
             [Test]
+            [Category("E2E")]
             public void LoginDoctor_AddAbsenceAndDeleteAbsence_Succesful()
             {
                 var name = "doctor2";
