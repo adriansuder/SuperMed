@@ -12,6 +12,7 @@ namespace SuperMed.Tests.Unit.Controller
     public class HomeControllerShould
     {
         [Test]
+        [Category("UnitTest")]
         public void ReturnPatientsViewWhenUserInPatientRole()
         {
             IFixture fixture = new Fixture();
@@ -46,6 +47,7 @@ namespace SuperMed.Tests.Unit.Controller
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnDoctorsViewWhenUserInDoctorsRole()
         {
             IFixture fixture = new Fixture();

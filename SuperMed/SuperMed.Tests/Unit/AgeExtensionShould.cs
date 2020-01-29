@@ -9,6 +9,7 @@ namespace SuperMed.Tests.Unit
     public class AgeExtensionShould
     {
         [Test]
+        [Category("UnitTest")]
         public void ReturnCorrectValue()
         {
             var dt = new DateTime(2000, 01, 01, 0, 0, 0);

@@ -9,6 +9,7 @@ namespace SuperMed.Tests.Unit
     public class NotBeforeTodayAttributeShould
     {
         [Test]
+        [Category("UnitTest")]
         public void ReturnTrueForToday()
         {
             var sut = new NotBeforeTodayAttribute();
@@ -17,6 +18,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnFalseWhenYesterday()
         {
             var sut = new NotBeforeTodayAttribute();
@@ -27,6 +29,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnFalseWhenTomorrow()
         {
             var sut = new NotBeforeTodayAttribute();

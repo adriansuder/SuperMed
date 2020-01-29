@@ -15,6 +15,7 @@ namespace SuperMed.Tests.Unit.Repository
     public class AppointmentsRepositoryShould
     {
         [Test]
+        [Category("UnitTest")]
         public async Task AddAppointmentToDatabase()
         {
             IFixture fixture = new Fixture();
@@ -38,6 +39,7 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task DeleteAppointmentFromDatabase()
         {
             IFixture fixture = new Fixture();

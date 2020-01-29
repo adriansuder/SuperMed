@@ -1,20 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 using NUnit.Framework;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
-using OpenQA.Selenium.Interactions;
-using OpenQA.Selenium.Remote;
-using OpenQA.Selenium.Support.UI;
 using System.Linq;
-using SuperMed.Models.Entities;
-using SuperMed.DAL;
 //using OpenQA.Selenium.Firefox;
-using System.IO;
 using SuperMed.Tests.E2E.Pages;
 
-namespace SuperMed.Tests
+namespace SuperMed.Tests.E2E
 {
     public class SeleniumTests
     {

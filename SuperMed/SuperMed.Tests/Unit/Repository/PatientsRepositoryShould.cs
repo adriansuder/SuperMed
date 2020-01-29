@@ -15,6 +15,7 @@ namespace SuperMed.Tests.Unit.Repository
     public class PatientsRepositoryShould
     {
         [Test]
+        [Category("UnitTest")]
         public async Task UpdatePatientsInfo()
         {
             IFixture fixture = new Fixture();
