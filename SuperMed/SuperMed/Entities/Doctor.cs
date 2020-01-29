@@ -1,10 +1,12 @@
 ﻿using SuperMed.Auth;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuperMed.Entities
 {
     public class Doctor
     {
+        [Key]
         public int Id { get; set; }
         
         public string Name { get; set; }

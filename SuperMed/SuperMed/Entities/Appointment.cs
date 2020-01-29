@@ -1,9 +1,11 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 
 namespace SuperMed.Entities
 {
     public class Appointment
     {
+        [Key]
         public int Id { get; set; }
 
         public DateTime StartDateTime { get; set; }

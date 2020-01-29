@@ -8,6 +8,7 @@ namespace SuperMed.Tests.Unit
     public class StringExtensionShould
     {
         [Test]
+        [Category("UnitTest")]
         [TestCase("a","A")]
         [TestCase("aa", "Aa")]
         [TestCase("tEst", "Test")]

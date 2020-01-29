@@ -44,6 +44,7 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task CallAddAsyncAndSaveChangesAsyncOnce()
         {
             await absenceRepository.CreateAsync(testDoctorAbsence, CancellationToken.None);
@@ -53,6 +54,7 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task ShouldAddWriteToDatabase()
         {
             IFixture fixture = new Fixture();
@@ -74,6 +76,7 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task AddAbsenceToDatabase()
         {
             IFixture fixture = new Fixture();
@@ -95,6 +98,7 @@ namespace SuperMed.Tests.Unit.Repository
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task ReturnAbsenceFromDatabase()
         {
             IFixture fixture = new Fixture();

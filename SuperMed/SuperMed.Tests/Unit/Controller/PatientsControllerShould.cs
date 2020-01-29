@@ -25,6 +25,7 @@ namespace SuperMed.Tests.Unit.Controller
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task Index_Return_View()
         {
             var sut = new PatientsController(_appService.Object)
@@ -47,6 +48,7 @@ namespace SuperMed.Tests.Unit.Controller
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task CreateVisitStep2_Returns_View_When_ModelStateInvalid()
         {
             _appService.Setup(m => m.GetDoctorsAppointmentsForDay(It.IsAny<string>(), It.IsAny<DateTime>(), CancellationToken.None))
@@ -74,6 +76,7 @@ namespace SuperMed.Tests.Unit.Controller
         }
 
         [Test]
+        [Category("UnitTest")]
         public async Task SubmitChangedInfo_Redirects_To_IndexAction()
         {
             _appService.Setup(m => m.ChangePatientInfo(It.IsAny<string>(), CancellationToken.None))

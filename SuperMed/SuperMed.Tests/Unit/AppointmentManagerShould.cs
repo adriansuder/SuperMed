@@ -10,6 +10,7 @@ namespace SuperMed.Tests.Unit
     public class AppointmentManagerShould
     {
         [Test]
+        [Category("UnitTest")]
         public void GenerateCorrectNumberOfTimes()
         {
             var availableDayTimes = AppointmentManager.GetAvailableTimes(DateTime.Today.AddDays(1));
@@ -18,6 +19,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnCorrectFirstHourOfDay()
         {
             var actual = AppointmentManager.GetAvailableTimes(DateTime.Today.AddDays(1));
@@ -27,6 +29,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnCorrectLastHourOfDay()
         {
             var actual = AppointmentManager.GetAvailableTimes(DateTime.Today.AddDays(1));
@@ -36,6 +39,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void ReturnTimesEveryFifteenMinutes()
         {
             var actual = AppointmentManager.GetAvailableTimes(DateTime.Today.AddDays(1));
@@ -45,6 +49,7 @@ namespace SuperMed.Tests.Unit
         }
 
         [Test]
+        [Category("UnitTest")]
         public void NotReturnMidDayTimes()
         {
             var actual = AppointmentManager.GetAvailableTimes(DateTime.Today.AddDays(1));
