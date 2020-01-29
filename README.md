@@ -6,6 +6,11 @@ Projekt zaliczeniowy do przedmiotu Programowanie aplikacji w ASP.NET
 Wymagana baza Microsoft SQL Server (w dowolnej wersji) z zainstalowaną LocalDB.
 
 Upewnić się, że baza o nazwie **SuperMedLocalDB_ASPNET** nie istnieje!
+oraz, że narzędzia interfejsu wiersza polecenia (CLI) dla Entity Framework Core są zainstalowane, jeśli nie proszę w wierszu poleceń wykonać polecenie
+
+```
+dotnet tool install --global dotnet-ef
+```
 
 Po pobraniu źródeł aplikacji, uruchomić można na dwa sposoby:
 
@@ -17,6 +22,7 @@ Po pobraniu źródeł aplikacji, uruchomić można na dwa sposoby:
 
 -- Sposób 2:
 - wypakować źródła do folderu
+- otworzyć wiersz poleceń jako administrator
 - w wierszu poleceń przejść do folderu z plikiem **.sln** aplikacji
 - wykonać po kolei komendy:
 ```
