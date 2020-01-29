@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+﻿@using SuperMed.Extensions
 @using SuperMed.Models.Entities
 @model SuperMed.Models.ViewModels.EditAppointmentViewModel
 
@@ -8,7 +8,7 @@
 
 <div class="card">
     <h5 class="card-header">
-        Podgląd Twojej wizyty z dnia <b>@Model.Appointment.StartDateTime.ToString("F", new CultureInfo("PL-pl"))</b>
+        Podgląd Twojej wizyty z dnia <b>@Model.Appointment.StartDateTime.ToString("F")</b>
     </h5>
     @{
         var status = Model.Appointment.Status == Status.New ? "alert alert-success" : "alert alert-danger";
@@ -18,7 +18,8 @@
         @statusName
     </div>
     <div class="card-body">
-        <h5 class="card-title">lek. @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName</h5>
+        <h5 class="card-title">pacjent: @Model.Appointment.Patient.FirstName @Model.Appointment.Patient.LastName.Capitalize() (@Model.Appointment.Patient.Gender.GetDisplayName())</h5>
+        <h5 class="card-title">lekarz: @Model.Appointment.Doctor.FirstName @Model.Appointment.Doctor.LastName.Capitalize()</h5>
         <p>
             <h5>Opis:</h5>
         </p>
@@ -39,16 +40,16 @@
                     <textarea type="text" asp-for="Appointment.Review" class="form-control"></textarea>
                     <span asp-validation-for="Appointment.Review" class="text-danger"></span>
                 </div>
-                <br />
+                <br/>
 
                 @if (Model.Appointment.Status == Status.New)
                 {
-                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę" />
+                    <input type="submit" class="btn btn-warning float-right" value="Zakończ wizytę"/>
                     <h6 class="float-right">Upewnij się, że chcesz zakończyć wizytę. Ta akcja jest nieodwracalna!</h6>
                 }
             </form>
 
-            <a asp-controller="Doctors" asp-action="Index">← Wróć</a>
+            <a asp-controller="Doctors" asp-action="DoctorAppointmentHistory">← Wróć</a>
         }
         else
         {
@@ -56,10 +57,10 @@
                 <h4>Opinia i diagnoza wystawiona przez doktora:</h4>
             </p>
             <div class="col-md-10">
-                <textarea type="text" asp-for="Appointment.Review" class="form-control" disabled placeholder="Wypełnia lekarz."></textarea>
+                <span class="form-control">@Model.Appointment.Review</span>
                 <span asp-validation-for="Appointment.Review" class="text-danger"></span>
             </div>
-            <br />
+            <br/>
             @if (Model.Appointment.StartDateTime > DateTime.Now && Model.Appointment.Status != Status.Finished)
             {
                 @Html.ActionLink("Odwołaj wizytę", "Delete",
@@ -67,7 +68,7 @@
                     new { onclick = "return confirm('Czy jesteś pewny/a aby odwołać tę wizytę?');", @class = "cancellVisit btn btn-warning float-right" })
             }
 
-            <a asp-controller="Patients" asp-action="Index">← Wróć</a>
+            <a asp-controller="Patients" asp-action="PatientAppointmentHistory">← Wróć</a>
         }
     </div>
 </div>

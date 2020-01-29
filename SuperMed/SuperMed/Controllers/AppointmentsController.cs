@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SuperMed.Auth;
 using SuperMed.DAL.Repositories.Interfaces;
 using SuperMed.Models.Entities;
 using SuperMed.Models.ViewModels;
@@ -12,34 +10,30 @@ namespace SuperMed.Controllers
     [Authorize]
     public class AppointmentsController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAppointmentsRepository _appointmentsRepository;
         private readonly IDoctorsRepository _doctorsRepository;
 
         public AppointmentsController(
-            UserManager<ApplicationUser> userManager, 
             IAppointmentsRepository appointmentsRepository,
             IDoctorsRepository doctorsRepository)
         {
-            _userManager = userManager;
             _appointmentsRepository = appointmentsRepository;
             _doctorsRepository = doctorsRepository;
         }
 
         [HttpGet("{id}")]
-        [Route("Index")]
+        [Route("Appointment")]
         public async Task<IActionResult> Index(int id)
         {
             var appointment = await _appointmentsRepository.GetAppointmentById(id);
-            var currentUser = _userManager.GetUserName(User);
-            var isDoctor = await _doctorsRepository.GetDoctorByName(currentUser) != null;
+            var isDoctor = await _doctorsRepository.GetDoctorByName(User.Identity.Name) != null;
 
             if (appointment == null)
             {
                 return RedirectToAction("AccessDenied", "Account");
             }
 
-            if (appointment.Patient.Name != currentUser && appointment.Doctor.Name != currentUser)
+            if (appointment.Patient.Name != User.Identity.Name && appointment.Doctor.Name != User.Identity.Name)
             {
                 return RedirectToAction("AccessDenied", "Account");
             }
@@ -54,7 +48,7 @@ namespace SuperMed.Controllers
         }
 
         [HttpGet("{id}")]
-        [Route("Delete")]
+        [Route("DeleteAppointment")]
         public async Task<IActionResult> Delete(int id)
         {
             var appointmentToRemove = await _appointmentsRepository.GetAppointmentById(id);

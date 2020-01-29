@@ -20,8 +20,8 @@ namespace SuperMed.DAL.Repositories
 
         public async Task<Appointment> AddAppointment(Appointment appointment)
         {
-            await _dbContext.Appointments.AddAsync(appointment);
-            await _dbContext.SaveChangesAsync();
+            await _dbContext.Appointments.AddAsync(appointment, CancellationToken.None);
+            await _dbContext.SaveChangesAsync(CancellationToken.None);
 
             return appointment;
         }

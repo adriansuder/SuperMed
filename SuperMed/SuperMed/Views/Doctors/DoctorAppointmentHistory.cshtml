@@ -1,4 +1,4 @@
-﻿@using System.Globalization
+﻿@using SuperMed.Extensions
 @model SuperMed.Models.ViewModels.DoctorAppointmentHistoryViewModel
 
 @{
@@ -7,7 +7,7 @@
 
 <h3>Doktorze, sprawdź historię swoich wizyt</h3>
 
-<a asp-controller="Home" asp-action="Index">← Wróć</a>
+<a asp-controller="Doctors" asp-action="Index">← Wróć</a>
 
 <ul class="list-group mt-3">
     @if (Model.RealizedAppointments.Count == 0)
@@ -20,10 +20,10 @@
         {
             <li class="list-group-item">
                 <button type="button" class="btn btn-outline-info" style="min-width: 280px;">
-                    @modelAppointment.StartDateTime.ToString("f", new CultureInfo("PL-pl"))
+                    @modelAppointment.StartDateTime.ToString("f")
                 </button>&nbsp;
                 @modelAppointment.Patient.FirstName
-                @modelAppointment.Patient.LastName
+                @modelAppointment.Patient.LastName.Capitalize()
 
                 @{
                     var imagePath = @"../assets/" + modelAppointment.Status.ToString().ToLower() + ".png";
