@@ -29,7 +29,7 @@
                                 @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
                                 <div class="btn-group float-right" role="group" aria-label="Basic example">
-                                    <a asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
+                                    <a id="@modelAppointment.StartDateTime.ToString("ddMMyyyy")" asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
                                 </div>
                             </li>
                         }

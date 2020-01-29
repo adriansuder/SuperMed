@@ -14,7 +14,7 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement confirmButton => _driver.FindElement(By.CssSelector("input[type='submit']"));
+        private IWebElement confirmButton => _driver.FindElement(By.CssSelector("input[type='submit']"));
         public addAppoinmentStep3 clickConfirm()
         {
             confirmButton.Click();

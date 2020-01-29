@@ -14,9 +14,9 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement absenceDateInput => _driver.FindElement(By.Id("AbsenceDate"));
-        public IWebElement absenceDescription => _driver.FindElement(By.Id("AbsenceDescription"));
-        public IWebElement addAbsenceButton => _driver.FindElement(By.CssSelector("input[value='Dodaj']"));
+        private IWebElement absenceDateInput => _driver.FindElement(By.Id("AbsenceDate"));
+        private IWebElement absenceDescription => _driver.FindElement(By.Id("AbsenceDescription"));
+        private IWebElement addAbsenceButton => _driver.FindElement(By.CssSelector("input[value='Dodaj']"));
         
         public AddAbsencePage fillAbsenceDate(string textToPass)
         {

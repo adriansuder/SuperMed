@@ -33,6 +33,7 @@ namespace SuperMed.Tests
             DoctorIndexPage doctorIndexPage;
             AddAbsencePage addAbsencePage;
             EditAbsencePage editAbsencePage;
+            EditAppoinmentPage editAppoinmentPage;
 
             [SetUp]
             public void StartBrowser()
@@ -50,6 +51,7 @@ namespace SuperMed.Tests
                 doctorIndexPage = new DoctorIndexPage(_driver);
                 addAbsencePage = new AddAbsencePage(_driver);
                 editAbsencePage = new EditAbsencePage(_driver);
+                editAppoinmentPage = new EditAppoinmentPage(_driver);
 
             }
 
@@ -97,10 +99,9 @@ namespace SuperMed.Tests
             }
 
             [Test]
-            public void LoginPatient_AddAppoinmentOnAvailableDate_Succes()
+            public void LoginPatient_AddAndDeleteAppoinment_Succes()
             {
-                //change date on every test, second test call will return false
-                var testDate = "08.02.2020";
+                var testDate = "11.02.2020";
                 var name = "testPatient2";
                 var description = "Podstawowa wizyta stomatologiczna";
                 var password = "!SuperMed123";
@@ -120,8 +121,15 @@ namespace SuperMed.Tests
                 step2.selectHour()
                     .GoToStep3();
                 step3.clickConfirm();
-                StringAssert.EndsWith(_driver.Url, "https://localhost:44324/Patients");
+                Assert.That(patientPage.isAppoinmentDisplayedOnIndexPage(testDate), Is.True);
+                Assert.AreEqual(_driver.Url, "https://localhost:44324/Patients");
                 Assert.That(_driver.FindElements(By.CssSelector("li.UpCommingAppoinments")).ToList().Count == (count + 1));
+                patientPage.GoTo_EditAppoinmentPage(testDate);
+                editAppoinmentPage.confirmVisitCancellation()
+                    .acceptAlert();
+                Assert.That(patientPage.isAppoinmentDisplayedOnIndexPage(testDate), Is.False);
+                Assert.AreEqual(_driver.Url, "https://localhost:44324/Patients");
+                //System.Threading.Thread.Sleep(15000);
             }
 
             [Test]
@@ -147,7 +155,6 @@ namespace SuperMed.Tests
                 editAbsencePage.clickOnDeleteButton(dateElementId)
                     .acceptAlert();
                 Assert.That(doctorIndexPage.isAbsenceDisplayedOnIndexPage(dateElementId), Is.False);
-
             }
 
             [TearDown]

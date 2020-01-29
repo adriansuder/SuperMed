@@ -16,16 +16,16 @@ namespace SuperMed.Tests.E2E.Pages
             _driver = driver;
         }
 
-        public IWebElement patientName => _driver.FindElement(By.Id("patientNameInput"));
-        public IWebElement patientPassword => _driver.FindElement(By.Id("patientPasswordInput"));
-        public IWebElement patientFirstName => _driver.FindElement(By.Id("patientFirstNameInput"));
-        public IWebElement patientLastName => _driver.FindElement(By.Id("patientLastNameInput"));
-        public IWebElement patientMail => _driver.FindElement(By.Id("patientMailInput"));
-        public IWebElement patientPhone => _driver.FindElement(By.Id("patientPhoneInput"));
-        public IWebElement patientBirthday => _driver.FindElement(By.Id("patientBirthdayInput"));
-        public SelectElement patientGender => new SelectElement(_driver.FindElement(By.Id("patientGenderSelect")));
-        public IWebElement registerButton => _driver.FindElement(By.ClassName("patientRegisterSubmit"));
-        public IWebElement validationDiv => _driver.FindElement(By.ClassName("validation-summary-errors"));
+        private IWebElement patientName => _driver.FindElement(By.Id("patientNameInput"));
+        private IWebElement patientPassword => _driver.FindElement(By.Id("patientPasswordInput"));
+        private IWebElement patientFirstName => _driver.FindElement(By.Id("patientFirstNameInput"));
+        private IWebElement patientLastName => _driver.FindElement(By.Id("patientLastNameInput"));
+        private IWebElement patientMail => _driver.FindElement(By.Id("patientMailInput"));
+        private IWebElement patientPhone => _driver.FindElement(By.Id("patientPhoneInput"));
+        private IWebElement patientBirthday => _driver.FindElement(By.Id("patientBirthdayInput"));
+        private SelectElement patientGender => new SelectElement(_driver.FindElement(By.Id("patientGenderSelect")));
+        private IWebElement registerButton => _driver.FindElement(By.ClassName("patientRegisterSubmit"));
+        private IWebElement validationDiv => _driver.FindElement(By.ClassName("validation-summary-errors"));
         public RegisterPatientPage fillName(string textToPass)
         {
             patientName.SendKeys(textToPass);

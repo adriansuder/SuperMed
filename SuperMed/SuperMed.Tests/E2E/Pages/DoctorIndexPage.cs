@@ -14,8 +14,8 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement addAbsenceButton => _driver.FindElement(By.Id("addAbsenceButton"));
-        public IWebElement editAbsenceButton => _driver.FindElement(By.Id("editAbsences"));
+        private IWebElement addAbsenceButton => _driver.FindElement(By.Id("addAbsenceButton"));
+        private IWebElement editAbsenceButton => _driver.FindElement(By.Id("editAbsences"));
         public DoctorIndexPage GoToAddAbsencePage()
         {
             addAbsenceButton.Click();

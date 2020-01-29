@@ -10,9 +10,9 @@ namespace SuperMed.Tests.E2E.Pages
         private readonly IWebDriver _driver;
         private const string URL = "https://localhost:44324";
 
-        public IWebElement LoginPageButton => _driver.FindElement(By.Id("LoginPageButton"));
-        public IWebElement RegisterPatientButton => _driver.FindElement(By.Id("registerPatient"));
-        public IWebElement RegisterDoctorButton => _driver.FindElement(By.XPath("/html/body/div/main/div[2]/div/div[2]/div/p/a"));
+        private IWebElement LoginPageButton => _driver.FindElement(By.Id("LoginPageButton"));
+        private IWebElement RegisterPatientButton => _driver.FindElement(By.Id("registerPatient"));
+        private IWebElement RegisterDoctorButton => _driver.FindElement(By.XPath("/html/body/div/main/div[2]/div/div[2]/div/p/a"));
 
         public HomePage(IWebDriver driver)
         {

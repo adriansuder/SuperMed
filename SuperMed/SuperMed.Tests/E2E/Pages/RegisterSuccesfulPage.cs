@@ -12,7 +12,7 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement registerSuccesfulInfo => _driver.FindElement(By.Id("registerSuccesfulInfo"));
+        private IWebElement registerSuccesfulInfo => _driver.FindElement(By.Id("registerSuccesfulInfo"));
         public bool isRegisterSuccesfullInfoDisplayed()
         {
             return registerSuccesfulInfo.Displayed;

@@ -14,8 +14,8 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement appoinmentTime => _driver.FindElement(By.CssSelector("input[value='11:00']"));
-        public IWebElement goToStep3 => _driver.FindElement(By.Id("DelButton"));
+        private IWebElement appoinmentTime => _driver.FindElement(By.CssSelector("input[value='11:00']"));
+        private IWebElement goToStep3 => _driver.FindElement(By.Id("DelButton"));
         public addAppoinmentStep2 selectHour()
         {
             appoinmentTime.Click();

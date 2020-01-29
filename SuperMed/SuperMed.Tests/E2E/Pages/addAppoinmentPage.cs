@@ -14,10 +14,10 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement appoinmentDate => _driver.FindElement(By.Id("StartDateTime"));
-        public IWebElement description => _driver.FindElement(By.Id("Description"));
-        public IWebElement goToStep2Button => _driver.FindElement(By.Id("GoToStep2"));
-        public SelectElement doctorName => new SelectElement(_driver.FindElement(By.Id("DoctorName")));
+        private IWebElement appoinmentDate => _driver.FindElement(By.Id("StartDateTime"));
+        private IWebElement description => _driver.FindElement(By.Id("Description"));
+        private IWebElement goToStep2Button => _driver.FindElement(By.Id("GoToStep2"));
+        private SelectElement doctorName => new SelectElement(_driver.FindElement(By.Id("DoctorName")));
         public addAppoinmentPage fillDate(string textToPass)
         {
             appoinmentDate.SendKeys(textToPass);

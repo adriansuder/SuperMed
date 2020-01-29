@@ -14,9 +14,9 @@ namespace SuperMed.Tests.E2E.Pages
         {
             _driver = driver;
         }
-        public IWebElement userName => _driver.FindElement(By.Id("Name"));
-        public IWebElement userPassword => _driver.FindElement(By.Id("Password"));
-        public IWebElement loginButton => _driver.FindElement(By.ClassName("btn-primary"));
+        private IWebElement userName => _driver.FindElement(By.Id("Name"));
+        private IWebElement userPassword => _driver.FindElement(By.Id("Password"));
+        private IWebElement loginButton => _driver.FindElement(By.ClassName("btn-primary"));
 
         public LoginPage fillUserName(string textToPass)
         {
