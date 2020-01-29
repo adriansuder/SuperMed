@@ -19,10 +19,14 @@ Po pobraniu źródeł aplikacji, uruchomić można na dwa sposoby:
 - wypakować źródła do folderu
 - w wierszu poleceń przejść do folderu z plikiem **.sln** aplikacji
 - wykonać po kolei komendy:
-		- dotnet build
-		- dotnet test
-		- dotnet run --project SuperMed/SuperMed.csproj
-		- otworzyć w dowolnej przeglądarce adres podany w linijce zaczynającej się od: Now listening on... (prawdopodobnie: https://localhost:5001)
+```
+dotnet build
+dotnet test --filter TestCategory=UnitTest
+dotnet ef migrations add InitialCreate --project SuperMed/SuperMed.csproj
+dotnet ef database update --project SuperMed/SuperMed.csproj
+dotnet run --project SuperMed/SuperMed.csproj
+```
+otworzyć w dowolnej przeglądarce adres podany w linijce zaczynającej się od: Now listening on... (prawdopodobnie: https://localhost:5001)
 
 ## Krótki opis funkcjonalny
 
