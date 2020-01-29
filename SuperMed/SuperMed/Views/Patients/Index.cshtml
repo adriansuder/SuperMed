@@ -26,8 +26,8 @@
                                 <button type="button" class="btn btn-outline-primary" style="min-width: 290px">
                                     @modelAppointment.StartDateTime.ToString("f")
                                 </button>&nbsp;
-                                @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
+                                @modelAppointment.Doctor.LastName.Capitalize()
                                 <div class="btn-group float-right" role="group" aria-label="Basic example">
                                     <a id="@modelAppointment.StartDateTime.ToString("ddMMyyyy")" asp-controller="Appointments" asp-action="Index" asp-route-Id="@modelAppointment.Id" class="btn btn-secondary">Edytuj</a>
                                 </div>
@@ -50,18 +50,18 @@
                                 <button type="button" class="btn btn-outline-secondary disabled" style="min-width: 290px">
                                     @modelAppointment.StartDateTime.ToString("f")
                                 </button>&nbsp;
-                                @modelAppointment.Doctor.LastName
                                 @modelAppointment.Doctor.FirstName
-                                <a asp-controller="Appointments" 
-                                   asp-action="Index" 
-                                   asp-route-Id="@modelAppointment.Id" 
+                                @modelAppointment.Doctor.LastName.Capitalize()
+                                <a asp-controller="Appointments"
+                                   asp-action="Index"
+                                   asp-route-Id="@modelAppointment.Id"
                                    class="btn btn-outline-info float-right">Zobacz</a>
                             </li>
                         }
-                        <br />
-                        <a class="btn btn-light float-right" asp-controller="Patients" asp-action="PatientAppointmentHistory">Historia wizyt</a>
                     }
                 </ul>
+                <br />
+                <a class="btn btn-light float-right" asp-controller="Patients" asp-action="PatientAppointmentHistory">Historia wizyt</a>
             </div>
         </div>
     </div>
@@ -75,7 +75,7 @@
                     <br />
                     @Model.Patient.FirstName.Capitalize() @Model.Patient.LastName.Capitalize()
                     <br />
-                    @Model.Patient.Age lat (@Model.Patient.BirthDate.ToString("dd/MM/yyyy")), @Model.Patient.Gender.GetDisplayName()
+                    @Model.Patient.BirthDate.GetAge() lat (@Model.Patient.BirthDate.ToString("dd/MM/yyyy")), @Model.Patient.Gender.GetDisplayName()
                     <br />
                     Telefon: @Model.Patient.Phone
                     <br />

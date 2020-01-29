@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using SuperMed.Models.Entities;
+using SuperMed.Entities;
 
 namespace SuperMed.DAL
 {
@@ -22,7 +22,8 @@ namespace SuperMed.DAL
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder
-                    .UseSqlServer("Server=(localdb)\\MSSQLLocalDB;Database=SuperMedDB;Trusted_Connection=True;MultipleActiveResultSets=true");
+                    .UseSqlServer(
+                        "Server=(localdb)\\MSSQLLocalDB;Database=SuperMedDB;Trusted_Connection=True;MultipleActiveResultSets=true");
             }
         }
 
@@ -33,14 +34,14 @@ namespace SuperMed.DAL
             builder.Entity<Doctor>(b =>
             {
                 b.ToTable("Doctors");
-                b.HasKey(x => x.DoctorId);
+                b.HasKey(x => x.Id);
                 b.HasOne(x => x.Specialization);
+                b.HasOne(x => x.ApplicationUser);
             });
 
-            builder.Entity<Specialization>(b =>
-            {
-                b.HasKey(x => x.Id);
-            });
+            builder.Entity<Patient>(b => { b.HasOne(x => x.ApplicationUser); });
+
+            builder.Entity<Specialization>(b => { b.HasKey(x => x.SpecializationId); });
         }
     }
 }

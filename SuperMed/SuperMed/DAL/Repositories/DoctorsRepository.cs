@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
+using SuperMed.Entities;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SuperMed.DAL.Repositories
 {
-    public class DoctorsRepository : IDoctorsRepository
+    public class DoctorsRepository : IRepository<Doctor>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -16,24 +16,51 @@ namespace SuperMed.DAL.Repositories
             this._dbContext = _dbContext;
         }
 
-        public async Task<IEnumerable<Doctor>> GetAllDoctors()
+        public async Task CreateAsync(Doctor item, CancellationToken cancellationToken)
         {
-            var doctors = await _dbContext.Doctors.ToListAsync(CancellationToken.None);
-            
-            return doctors;
+            await _dbContext.Doctors.AddAsync(item, cancellationToken).ConfigureAwait(false);
+            await SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Doctor> GetDoctorByName(string doctorName)
+        public async Task<Doctor> GetAsync(int id, CancellationToken cancellationToken)
         {
-            return await _dbContext.Doctors.FirstOrDefaultAsync(user => user.Name == doctorName);
+            return await _dbContext.Doctors
+                .Include(d => d.Appointments)
+                .FirstOrDefaultAsync(p => p.Id == id, cancellationToken)
+                .ConfigureAwait(false);
         }
 
-        public async Task<Doctor> AddDoctor(Doctor doctor)
+        public async Task<Doctor> GetAsync(string name, CancellationToken cancellationToken)
         {
-            await _dbContext.Doctors.AddAsync(doctor, CancellationToken.None);
-            await _dbContext.SaveChangesAsync(CancellationToken.None);
-            
-            return doctor;
+            return await _dbContext.Doctors
+                .Include(d => d.Appointments)
+                .FirstOrDefaultAsync(p => p.Name == name, cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public async Task DeleteAsync(Doctor item, CancellationToken cancellationToken)
+        {
+            _dbContext.Doctors.Remove(item);
+            await SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<List<Doctor>> ListAsync(CancellationToken cancellationToken)
+        {
+            return await _dbContext.Doctors
+                .Include(d => d.Specialization)
+                .AsQueryable()
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public Task<Doctor> Update(Doctor item, CancellationToken cancellationToken)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }

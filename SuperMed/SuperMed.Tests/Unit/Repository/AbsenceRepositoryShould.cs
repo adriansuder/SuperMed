@@ -5,10 +5,10 @@ using Moq;
 using NUnit.Framework;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
-using SuperMed.Models.Entities;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using SuperMed.Entities;
 
 namespace SuperMed.Tests.Unit.Repository
 {
@@ -17,13 +17,18 @@ namespace SuperMed.Tests.Unit.Repository
     {
         private Mock<DbSet<DoctorAbsence>> mockSet;
         private Mock<ApplicationDbContext> mockContext;
-        private AbsenceRepository absenceRepository;
+        private IRepository<DoctorAbsence> absenceRepository;
         private DoctorAbsence testDoctorAbsence;
 
         [SetUp]
         public void Setup()
         {
-            IFixture fixture = new Fixture();
+            IFixture fixture = new Fixture(); 
+            
+            fixture.Behaviors.OfType<ThrowingRecursionBehavior>().ToList()
+                .ForEach(b => fixture.Behaviors.Remove(b));
+            fixture.Behaviors.Add(new OmitOnRecursionBehavior());
+
             var databaseName = fixture.Create<string>();
 
             var options = new DbContextOptionsBuilder<ApplicationDbContext>()
@@ -41,7 +46,7 @@ namespace SuperMed.Tests.Unit.Repository
         [Test]
         public async Task CallAddAsyncAndSaveChangesAsyncOnce()
         {
-            await absenceRepository.AddAbsence(testDoctorAbsence);
+            await absenceRepository.CreateAsync(testDoctorAbsence, CancellationToken.None);
 
             mockSet.Verify(m => m.AddAsync(testDoctorAbsence, It.IsAny<CancellationToken>()), Times.Once);
             mockContext.Verify(m => m.SaveChangesAsync(It.IsAny<CancellationToken>()), Times.Once);
@@ -80,7 +85,7 @@ namespace SuperMed.Tests.Unit.Repository
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AbsenceRepository(context);
-                await repository.AddAbsence(testDoctorAbsence);
+                await repository.CreateAsync(testDoctorAbsence, CancellationToken.None);
             }
 
             using (var context = new ApplicationDbContext(options))
@@ -101,13 +106,13 @@ namespace SuperMed.Tests.Unit.Repository
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AbsenceRepository(context);
-                await repository.AddAbsence(testDoctorAbsence);
+                await repository.CreateAsync(testDoctorAbsence, CancellationToken.None);
             }
 
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AbsenceRepository(context);
-                var ret = await repository.GetDoctorsAbscenceByDate(testDoctorAbsence.Doctor.Name, testDoctorAbsence.AbsenceDate);
+                var ret = await repository.GetAsync(testDoctorAbsence.Doctor.Name, CancellationToken.None);
 
                 ret.AbsenceDate.Should().Be(testDoctorAbsence.AbsenceDate);
                 ret.AbsenceDescription.Should().Be(testDoctorAbsence.AbsenceDescription);

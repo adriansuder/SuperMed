@@ -3,10 +3,11 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
-using SuperMed.Models.Entities;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using AutoFixture;
+using SuperMed.Entities;
 
 namespace SuperMed.Tests.Unit.Repository
 {
@@ -27,7 +28,7 @@ namespace SuperMed.Tests.Unit.Repository
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AppointmentsRepository(context);
-                await repository.AddAppointment(fixture.Create<Appointment>());
+                await repository.CreateAsync(fixture.Create<Appointment>(), CancellationToken.None);
             }
 
             using (var context = new ApplicationDbContext(options))
@@ -51,7 +52,7 @@ namespace SuperMed.Tests.Unit.Repository
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new AppointmentsRepository(context);
-                await repository.AddAppointment(appointment);
+                await repository.CreateAsync(appointment, CancellationToken.None);
             }
 
             using (var context = new ApplicationDbContext(options))
@@ -59,7 +60,7 @@ namespace SuperMed.Tests.Unit.Repository
                 context.Appointments.Count().Should().Be(1);
 
                 var repository = new AppointmentsRepository(context);
-                await repository.DeleteAppointmentById(appointment.Id);
+                await repository.DeleteAsync(appointment, CancellationToken.None);
                 
                 context.Appointments.Count().Should().Be(0);
             }

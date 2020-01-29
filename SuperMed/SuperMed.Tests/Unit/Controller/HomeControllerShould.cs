@@ -35,8 +35,14 @@ namespace SuperMed.Tests.Unit.Controller
             };
 
             var result = sut.Index() as RedirectToActionResult;
-            result?.ActionName.Should().Be("Index");
-            result?.ControllerName.Should().Be("Patients");
+            result.Should().NotBe(null);
+            if (result != null)
+            {
+                result.ActionName.Should().Be("Index");
+                result.ControllerName.Should().Be("Patients");
+            }
+
+            sut.Dispose();
         }
 
         [Test]
@@ -63,8 +69,14 @@ namespace SuperMed.Tests.Unit.Controller
             };
 
             var result = sut.Index() as RedirectToActionResult;
-            result?.ActionName.Should().Be("Index");
-            result?.ControllerName.Should().Be("Doctors");
+            result.Should().NotBe(null);
+            if (result != null)
+            {
+                result.ActionName.Should().Be("Index");
+                result.ControllerName.Should().Be("Doctors");
+            }
+
+            sut.Dispose();
         }
     }
 }

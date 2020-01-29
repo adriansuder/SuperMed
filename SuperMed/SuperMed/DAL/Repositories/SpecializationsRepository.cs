@@ -1,12 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
+using SuperMed.Entities;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace SuperMed.DAL.Repositories
 {
-    public class SpecializationsRepository : ISpecializationsRepository
+    public class SpecializationsRepository : IRepository<Specialization>
     {
         private readonly ApplicationDbContext _dbContext;
 
@@ -15,33 +17,46 @@ namespace SuperMed.DAL.Repositories
             this._dbContext = _dbContext;
         }
 
-        public async Task<Specialization> GetSpecializationById(int specializationId)
+        public async Task CreateAsync(Specialization item, CancellationToken cancellationToken)
         {
-            return await _dbContext.Specializations
-                .FirstOrDefaultAsync(i => i.Id == specializationId,
-                CancellationToken.None);
+            await _dbContext.Specializations.AddAsync(item, cancellationToken).ConfigureAwait(false);
+            await SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<Specialization> GetSpecializationByUserName(string specializationName)
+        public async Task<Specialization> GetAsync(int id, CancellationToken cancellationToken)
         {
             return await _dbContext.Specializations
-                .FirstOrDefaultAsync(user => user.Name == specializationName,
-                CancellationToken.None);
+                .FirstOrDefaultAsync(p => p.SpecializationId == id, cancellationToken)
+                .ConfigureAwait(false);
         }
 
-        public async Task<Specialization> AddSpecialization(Specialization specialization)
+        public Task<Specialization> GetAsync(string name, CancellationToken cancellationToken)
         {
-            var spec = _dbContext.Specializations
-                .FirstOrDefaultAsync(s => s.Name == specialization.Name,
-                CancellationToken.None);
+            throw new NotImplementedException();
+        }
 
-            if (spec == null)
-            {
-                await _dbContext.Specializations.AddAsync(specialization, CancellationToken.None);
-                await _dbContext.SaveChangesAsync(CancellationToken.None);
-            }
+        public async Task DeleteAsync(Specialization item, CancellationToken cancellationToken)
+        {
+            _dbContext.Specializations.Remove(item);
+            await SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
 
-            return specialization;
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
+        {
+            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+        }
+
+        public async Task<List<Specialization>> ListAsync(CancellationToken cancellationToken)
+        {
+            return await _dbContext.Specializations
+                .AsQueryable()
+                .ToListAsync(cancellationToken)
+                .ConfigureAwait(false);
+        }
+
+        public Task<Specialization> Update(Specialization item, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -14,10 +14,10 @@ namespace SuperMed.Extensions
 
         private static DisplayAttribute GetDisplayAttribute(object value)
         {
-            Type type = value.GetType();
+            var type = value.GetType();
             if (!type.IsEnum)
             {
-                throw new ArgumentException(string.Format("Type {0} is not an enum", type));
+                throw new ArgumentException($"Type {type} is not an enum");
             }
 
             // Get the enum field.

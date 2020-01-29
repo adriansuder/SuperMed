@@ -11,7 +11,7 @@
                 return input.ToUpper();
             }
 
-            for (int i = 0; i < ret.Length-1; i++)
+            for (var i = 0; i < ret.Length-1; i++)
             {
                 if (i == 0)
                 {

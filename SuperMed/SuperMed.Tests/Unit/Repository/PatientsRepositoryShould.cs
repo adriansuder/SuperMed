@@ -4,9 +4,10 @@ using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using SuperMed.DAL;
 using SuperMed.DAL.Repositories;
-using SuperMed.Models.Entities;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
+using SuperMed.Entities;
 
 namespace SuperMed.Tests.Unit.Repository
 {
@@ -31,7 +32,7 @@ namespace SuperMed.Tests.Unit.Repository
             using (var context = new ApplicationDbContext(options))
             {
                 var repository = new PatientsRepository(context);
-                await repository.AddPatient(patient);
+                await repository.CreateAsync(patient, CancellationToken.None);
             }
 
             using (var context = new ApplicationDbContext(options))
@@ -42,13 +43,13 @@ namespace SuperMed.Tests.Unit.Repository
                 patient.Phone = "888";
 
                 var repository = new PatientsRepository(context);
-                await repository.Update(patient);
+                await repository.Update(patient, CancellationToken.None);
 
                 context.Patients.Count().Should().Be(1);
-                context.Patients.FirstOrDefault()?.Phone.Should().Be("888");
-                context.Patients.FirstOrDefault()?.LastName.Should().Be("TestAfter");
-                context.Patients.FirstOrDefault()?.FirstName.Should().Be(firstNameBefore);
-                context.Patients.FirstOrDefault()?.BirthDate.Should().Be(birthDateBefore);
+                context.Patients.First().Phone.Should().Be("888");
+                context.Patients.First().LastName.Should().Be("TestAfter");
+                context.Patients.First().FirstName.Should().Be(firstNameBefore);
+                context.Patients.First().BirthDate.Should().Be(birthDateBefore);
             }
         }
     }

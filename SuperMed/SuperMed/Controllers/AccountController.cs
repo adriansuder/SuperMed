@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SuperMed.Auth;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
+using SuperMed.Entities;
 using SuperMed.Models.ViewModels;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
+using SuperMed.Services;
 
 namespace SuperMed.Controllers
 {
@@ -13,22 +14,16 @@ namespace SuperMed.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly IPatientsRepository _patientsRepository;
-        private readonly IDoctorsRepository _doctorsRepository;
-        private readonly ISpecializationsRepository _specializationsRepository;
+        private readonly IAppService _appService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            IPatientsRepository patientsRepository,
-            IDoctorsRepository doctorsRepository,
-            ISpecializationsRepository specializationsRepository)
+            IAppService appService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _patientsRepository = patientsRepository;
-            _doctorsRepository = doctorsRepository;
-            _specializationsRepository = specializationsRepository;
+            _appService = appService;
         }
 
         public IActionResult RegisterAdmin()
@@ -89,10 +84,10 @@ namespace SuperMed.Controllers
                         LastName = model.LastName,
                         BirthDate = model.BirthDate,
                         Phone = model.Phone,
-                        ApplicationUserID = user.Id
+                        ApplicationUser = user
                     };
 
-                    await _patientsRepository.AddPatient(patient);
+                    await _appService.AddPatient(patient, CancellationToken.None);
 
                     return View("RegisterSuccessful");
                 }
@@ -126,7 +121,7 @@ namespace SuperMed.Controllers
                 UserName = model.Name,
                 IsActive = true
             };
-
+            
             var createUserResult = await _userManager.CreateAsync(user, model.Password);
 
             if (createUserResult.Succeeded)
@@ -138,13 +133,13 @@ namespace SuperMed.Controllers
 
                 if (signInResult.Succeeded)
                 {
-                    await _specializationsRepository.AddSpecialization(
+                    await _appService.AddSpecialization(
                         new Specialization
                         {
                             Name = model.Specialization
-                        });
+                        }, CancellationToken.None);
 
-                    var docsSpec = await _specializationsRepository.GetSpecializationByUserName(model.Specialization);
+                    var docsSpec = await _appService.GetSpecializationByName(model.Specialization, CancellationToken.None);
 
                     var doctor = new Doctor
                     {
@@ -153,10 +148,10 @@ namespace SuperMed.Controllers
                         LastName = model.LastName,
                         Phone = model.Phone,
                         Specialization = docsSpec,
-                        ApplicationUserID = user.Id
+                        ApplicationUser = user
                     };
 
-                    await _doctorsRepository.AddDoctor(doctor);
+                    await _appService.AddDoctor(doctor, CancellationToken.None);
                     
                     return View("RegisterSuccessful");
                 }

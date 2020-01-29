@@ -2,19 +2,17 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SuperMed.Auth;
 using SuperMed.DAL;
-using SuperMed.DAL.Repositories;
-using SuperMed.DAL.Repositories.Interfaces;
-using SuperMed.Models.Entities;
+using SuperMed.DI;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.AspNetCore.Localization;
 
 namespace SuperMed
 {
@@ -40,11 +38,7 @@ namespace SuperMed
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"));
             });
 
-            services.AddScoped<IPatientsRepository, PatientsRepository>();
-            services.AddScoped<IDoctorsRepository, DoctorsRepository>();
-            services.AddScoped<ISpecializationsRepository, SpecializationsRepository>();
-            services.AddScoped<IAppointmentsRepository, AppointmentsRepository>();
-            services.AddScoped<IAbsenceRepository, AbsenceRepository>();
+            services.AddRepositories();
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
@@ -104,21 +98,21 @@ namespace SuperMed
         {
             var roleManager = serviceProvider.GetRequiredService<RoleManager<IdentityRole>>();
 
-            var hasPatientRole = roleManager.RoleExistsAsync(Roles.Patient);
+            var hasPatientRole = roleManager.RoleExistsAsync("Patient");
             hasPatientRole.Wait();
 
             if (!hasPatientRole.Result)
             {
-                var createRoleResult = roleManager.CreateAsync(new IdentityRole(Roles.Patient));
+                var createRoleResult = roleManager.CreateAsync(new IdentityRole("Patient"));
                 createRoleResult.Wait();
             }
 
-            var hasDoctorRole = roleManager.RoleExistsAsync(Roles.Doctor);
+            var hasDoctorRole = roleManager.RoleExistsAsync("Doctor");
             hasDoctorRole.Wait();
 
-            if (!hasDoctorRole.Result)
+            if (hasDoctorRole.Result) return;
             {
-                var createRoleResult = roleManager.CreateAsync(new IdentityRole(Roles.Doctor));
+                var createRoleResult = roleManager.CreateAsync(new IdentityRole("Doctor"));
                 createRoleResult.Wait();
             }
         }
