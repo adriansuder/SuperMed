@@ -19,7 +19,8 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var patientViewModel = await _appService.GetPatientsAppointments(User.Identity.Name, CancellationToken.None);
+            var patientViewModel =
+                await _appService.GetPatientsAppointments(User.Identity.Name, CancellationToken.None);
 
             return View(patientViewModel);
         }
@@ -79,7 +80,8 @@ namespace SuperMed.Controllers
         [HttpGet]
         public async Task<IActionResult> ChangeInfo()
         {
-            var changePatientInfoViewModel = await _appService.ChangePatientInfo(User.Identity.Name, CancellationToken.None);
+            var changePatientInfoViewModel =
+                await _appService.ChangePatientInfo(User.Identity.Name, CancellationToken.None);
 
             return View("ChangeInfo", changePatientInfoViewModel);
         }
@@ -94,7 +96,8 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> PatientAppointmentHistory()
         {
-            var patientAppointmentHistoryViewModel = await _appService.GetPatientsRealizedAppointments(User.Identity.Name, CancellationToken.None); 
+            var patientAppointmentHistoryViewModel =
+                await _appService.GetPatientsRealizedAppointments(User.Identity.Name, CancellationToken.None);
             
             return View(patientAppointmentHistoryViewModel);
         }

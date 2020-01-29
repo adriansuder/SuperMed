@@ -46,10 +46,10 @@ namespace SuperMed.Tests.Unit.Repository
                 await repository.Update(patient, CancellationToken.None);
 
                 context.Patients.Count().Should().Be(1);
-                context.Patients.FirstOrDefault()?.Phone.Should().Be("888");
-                context.Patients.FirstOrDefault()?.LastName.Should().Be("TestAfter");
-                context.Patients.FirstOrDefault()?.FirstName.Should().Be(firstNameBefore);
-                context.Patients.FirstOrDefault()?.BirthDate.Should().Be(birthDateBefore);
+                context.Patients.First().Phone.Should().Be("888");
+                context.Patients.First().LastName.Should().Be("TestAfter");
+                context.Patients.First().FirstName.Should().Be(firstNameBefore);
+                context.Patients.First().BirthDate.Should().Be(birthDateBefore);
             }
         }
     }

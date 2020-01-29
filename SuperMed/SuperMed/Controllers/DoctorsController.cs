@@ -21,14 +21,17 @@ namespace SuperMed.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var doctorsViewModel = await _appService.GetDoctorsAppointmentsForDay(User.Identity.Name, DateTime.Today, CancellationToken.None);
+            var doctorsViewModel =
+                await _appService.GetDoctorsAppointmentsForDay(User.Identity.Name, DateTime.Today,
+                    CancellationToken.None);
 
             return View(doctorsViewModel);
         }
 
         public async Task<IActionResult> DoctorAppointmentHistory()
         {
-            var doctorAppointmentHistoryViewModel = await _appService.GetDoctorsRealizedAppointments(User.Identity.Name, CancellationToken.None);
+            var doctorAppointmentHistoryViewModel =
+                await _appService.GetDoctorsRealizedAppointments(User.Identity.Name, CancellationToken.None);
 
             return View(doctorAppointmentHistoryViewModel);
         }
@@ -59,7 +62,8 @@ namespace SuperMed.Controllers
                 return View(model);
             }
 
-            await _appService.AddDoctorsAbsence(User.Identity.Name, model.AbsenceDate, model.AbsenceDescription, CancellationToken.None);
+            await _appService.AddDoctorsAbsence(User.Identity.Name, model.AbsenceDate, model.AbsenceDescription,
+                CancellationToken.None);
             
             return RedirectToAction("Index", "Home");
         }
